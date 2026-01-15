@@ -2,7 +2,7 @@
 
 @section('konten')
 <div class="card shadow m-2">
-    <div class="card-header text-dark">
+    <div class="card-header text-white">
         <div class="d-flex justify-content-between align-items-center">
             <h5>📦 Data Barang</h5>
 
