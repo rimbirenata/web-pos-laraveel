@@ -54,7 +54,7 @@
             <li class="mt-3">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit">Logout</button>
+                    <button type="submit" class="btn btn-danger w-100">Logout</button>
                 </form>
 
             </li>

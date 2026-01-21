@@ -10,11 +10,9 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        User::create([
-            'nama' => 'Admin',
-            'username' => 'admin',
-            'password' => Hash::make('123456'),
-            'no_hp' => '08123456789'
-        ]);
+        User::updateOrCreate(
+            ['username' => 'kasir'],
+            ['password' => Hash::make('kasir2')]
+        );
     }
 }

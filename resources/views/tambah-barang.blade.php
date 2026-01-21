@@ -20,10 +20,7 @@
         <form id="formBarang" action="{{ route('barang.simpan') }}" method="POST">
             @csrf
 
-            <div class="mb-2">
-                <label>ID Barang</label>
-                <input type="text" name="id_barang" class="form-control" required>
-            </div>
+            {{-- ❌ ID BARANG DIHAPUS TOTAL --}}
 
             <div class="mb-2">
                 <label>Nama Barang</label>
@@ -33,8 +30,11 @@
             <div class="mb-2">
                 <label>Kategori</label>
                 <select name="id_kategori" class="form-control" required>
+                    <option value="">-- Pilih Kategori --</option>
                     @foreach ($kategori as $k)
-                        <option value="{{ $k->id_kategori }}">{{ $k->nama_kategori }}</option>
+                        <option value="{{ $k->id_kategori }}">
+                            {{ $k->nama_kategori }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -42,25 +42,28 @@
             <div class="mb-2">
                 <label>Suplier</label>
                 <select name="id_suplier" class="form-control" required>
+                    <option value="">-- Pilih Suplier --</option>
                     @foreach ($suplier as $s)
-                        <option value="{{ $s->id_suplier }}">{{ $s->nama_suplier }}</option>
+                        <option value="{{ $s->id_suplier }}">
+                            {{ $s->nama_suplier }}
+                        </option>
                     @endforeach
                 </select>
             </div>
 
             <div class="mb-2">
                 <label>Stok</label>
-                <input type="number" name="stok" class="form-control" required>
+                <input type="number" name="stok" class="form-control" min="0" required>
             </div>
 
             <div class="mb-2">
                 <label>Harga Beli</label>
-                <input type="number" name="harga_beli" id="harga_beli" class="form-control" required>
+                <input type="number" name="harga_beli" id="harga_beli" class="form-control" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label>Harga Jual</label>
-                <input type="number" name="harga_jual" id="harga_jual" class="form-control" required>
+                <input type="number" name="harga_jual" id="harga_jual" class="form-control" min="0" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan</button>

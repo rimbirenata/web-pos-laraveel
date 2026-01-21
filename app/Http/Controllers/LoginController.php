@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -22,25 +22,19 @@ class LoginController extends Controller
 
         $user = User::where('username', $request->username)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            session([
-                'login' => true,
-                'id_user' => $user->id_user,
-                'nama' => $user->nama,
-                'username' => $user->username
-            ]);
-
-            return redirect('/dashboard');
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->with('error', 'Username atau Password salah');
         }
 
-        return back()->with('error', 'Username atau password salah');
+        session()->put('login', true);
+        session()->put('username', $user->username);
+
+        return redirect('/dashboard');
     }
 
     public function logout()
     {
-    session()->flush(); // hapus semua session
-    return redirect('/login'); // arahkan ke halaman login
+        session()->flush();
+        return redirect('/login');
     }
-
 }
-  

@@ -11,21 +11,22 @@ class BarangController extends Controller
 {
     public function index()
     {
-        $barang = Barang::with(['kategori', 'suplier'])->get();
+        $barang = Barang::with(['kategori','suplier'])->get();
         return view('data-barang', compact('barang'));
     }
 
     public function tambah()
     {
-        $kategori = Kategori::all();
-        $suplier  = Suplier::all();
-        return view('tambah-barang', compact('kategori','suplier'));
+        return view('tambah-barang', [
+            'kategori' => Kategori::all(),
+            'suplier'  => Suplier::all()
+        ]);
     }
 
+    // SIMPAN
     public function simpan(Request $request)
     {
         $request->validate([
-            'id_barang'   => 'required|unique:barang,id_barang',
             'nama_barang' => 'required',
             'id_kategori' => 'required',
             'id_suplier'  => 'required',
@@ -34,20 +35,29 @@ class BarangController extends Controller
             'harga_jual'  => 'required|numeric|gte:harga_beli',
         ]);
 
-        Barang::create($request->all());
+        Barang::create([
+            'nama_barang' => $request->nama_barang,
+            'id_kategori' => $request->id_kategori,
+            'id_suplier'  => $request->id_suplier,
+            'stok'        => $request->stok,
+            'harga_beli'  => $request->harga_beli,
+            'harga_jual'  => $request->harga_jual,
+        ]);
 
         return redirect()->route('barang.index')
-            ->with('success', 'Barang berhasil disimpan');
+            ->with('success','Barang berhasil disimpan');
     }
 
     public function ubah($id_barang)
     {
-        $barang   = Barang::findOrFail($id_barang);
-        $kategori = Kategori::all();
-        $suplier  = Suplier::all();
-        return view('ubah-barang', compact('barang','kategori','suplier'));
+        return view('ubah-barang', [
+            'barang'   => Barang::findOrFail($id_barang),
+            'kategori' => Kategori::all(),
+            'suplier'  => Suplier::all()
+        ]);
     }
 
+    // SIMPAN UBAH
     public function simpan_ubah(Request $request, $id_barang)
     {
         $request->validate([
@@ -59,19 +69,24 @@ class BarangController extends Controller
             'harga_jual'  => 'required|numeric|gte:harga_beli',
         ]);
 
-        $barang = Barang::findOrFail($id_barang);
-        $barang->update($request->all());
+        Barang::findOrFail($id_barang)->update([
+            'nama_barang' => $request->nama_barang,
+            'id_kategori' => $request->id_kategori,
+            'id_suplier'  => $request->id_suplier,
+            'stok'        => $request->stok,
+            'harga_beli'  => $request->harga_beli,
+            'harga_jual'  => $request->harga_jual,
+        ]);
 
         return redirect()->route('barang.index')
-            ->with('success', 'Barang berhasil diubah');
+            ->with('success','Barang berhasil diubah');
     }
 
     public function hapus($id_barang)
     {
-        $barang = Barang::findOrFail($id_barang);
-        $barang->delete();
+        Barang::findOrFail($id_barang)->delete();
 
         return redirect()->route('barang.index')
-            ->with('success', 'Barang berhasil dihapus');
+            ->with('success','Barang berhasil dihapus');
     }
 }

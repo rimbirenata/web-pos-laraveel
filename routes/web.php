@@ -28,42 +28,27 @@ use App\Http\Controllers\LaporanPenjualanController;
 |
 */
 
-route::get('/',function(){
+Route::get('/',function(){
     return redirect('/login');
-
+    });
 
 /* login */
-Route::get('/login', action: [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'proses_login']);
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'proses_login'])->name('login.proses');
 
-
-
-
-});
 
 // logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-Route::post('/logout', function () {
-    session()->flush();
-    return redirect('/login');
-})->name('logout');
 
-/* dashboard (protected) */
-Route::get('/dashboard', function () {
-    if (!session('login')) {
-        return redirect('/login');
-    }
-    return view('dashboard');
-});
+
+//halamann
+Route::get('/dashboard', [HalamanController::class, 'index']);
 
 
 
 
 
 
-
-//halaman dashboard
-route::get('/dashboard',[HalamanController::class,'index']);
 
 
 
