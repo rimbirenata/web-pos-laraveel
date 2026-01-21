@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class LoginController extends Controller
 {
-    public function login()
+    public function index()
     {
         return view('login');
     }
@@ -20,22 +19,20 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('username', $request->username)->first();
+        $user = User::where('username', $request->username)
+                    ->where('password', $request->password)
+                    ->first();
 
-        if ($user && $user->password == $request->password) {
-            Auth::login($user);
-            $request->session()->regenerate();
+        if ($user) {
+            session([
+                'login' => true,
+                'id_user' => $user->id_user,
+                'nama' => $user->nama
+            ]);
+
             return redirect('/dashboard');
         }
 
-        return back()->with('error', 'Username atau Password salah');
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
+        return back()->with('error', 'Username atau password salah');
     }
 }

@@ -33,22 +33,20 @@ route::get('/',function(){
     return redirect('login');
 
 
-
-});
-
-//ini login
-Route::get('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/login', [LoginController::class, 'index']);
 Route::post('/login', [LoginController::class, 'proses_login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware('auth');
+});
 
 
 
+
+});
+
+// logout
+Route::get('/logout', [LoginController::class, 'logout']);
 
 route::middleware('auth')->group(function(){
 
