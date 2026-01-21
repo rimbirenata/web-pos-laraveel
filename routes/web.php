@@ -33,12 +33,9 @@ route::get('/',function(){
     return redirect('login');
 
 
-Route::get('/login', [LoginController::class, 'index']);
+/* login */
+Route::get('/login', action: [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'proses_login']);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
 
 
 

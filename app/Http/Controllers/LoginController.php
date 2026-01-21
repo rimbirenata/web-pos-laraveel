@@ -16,18 +16,17 @@ class LoginController extends Controller
     {
         $request->validate([
             'username' => 'required',
-            'password' => 'required',
+            'password' => 'required'
         ]);
 
-        $user = User::where('username', $request->username)
-                    ->where('password', $request->password)
-                    ->first();
+        $user = User::where('username', $request->username)->first();
 
-        if ($user) {
+        if ($user && Hash::check($request->password, $user->password)) {
             session([
                 'login' => true,
                 'id_user' => $user->id_user,
-                'nama' => $user->nama
+                'nama' => $user->nama,
+                'username' => $user->username
             ]);
 
             return redirect('/dashboard');
@@ -36,3 +35,4 @@ class LoginController extends Controller
         return back()->with('error', 'Username atau password salah');
     }
 }
+  
