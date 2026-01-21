@@ -5,9 +5,12 @@
     </head>
     <body>
 
-    <h1>Dashboard</h1>
+    @extends('layout')
 
+    @section('konten')
+    <h1>Dashboard</h1>
     <p>Halo, {{ session('nama') }}</p>
+    @endsection
 
     <form action="{{ route('logout') }}" method="POST">
         @csrf

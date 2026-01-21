@@ -9,7 +9,6 @@ use App\Http\Controllers\TransaksiController;
 use App\Models\Kategori;
 use App\Models\Pelanggan;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LaporanPenjualanController;
 
 
@@ -30,7 +29,7 @@ use App\Http\Controllers\LaporanPenjualanController;
 */
 
 route::get('/',function(){
-    return redirect('login');
+    return redirect('/login');
 
 
 /* login */
@@ -43,9 +42,20 @@ Route::post('/login', [LoginController::class, 'proses_login']);
 });
 
 // logout
-Route::get('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/logout', function () {
+    session()->flush();
+    return redirect('/login');
+})->name('logout');
 
-route::middleware('auth')->group(function(){
+/* dashboard (protected) */
+Route::get('/dashboard', function () {
+    if (!session('login')) {
+        return redirect('/login');
+    }
+    return view('dashboard');
+});
+
 
 
 
@@ -113,9 +123,6 @@ Route::post('/transaksi/proses', [TransaksiController::class, 'proses']);
 Route::get('/pelanggan/cari/{hp}', [PelangganController::class, 'cari']);
 
 
-//ini adalh auth
-Route::get('/register', [AuthController::class, 'register']);
-Route::post('/register', [AuthController::class, 'registerProcess']);
 
 //laporan
 Route::get('/laporan-penjualan', [LaporanPenjualanController::class, 'index'])
@@ -128,4 +135,4 @@ Route::get('/profile', function () {
 })->name('profile');
 
 
-});
+

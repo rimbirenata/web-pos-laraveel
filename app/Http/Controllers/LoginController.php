@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -34,5 +35,12 @@ class LoginController extends Controller
 
         return back()->with('error', 'Username atau password salah');
     }
+
+    public function logout()
+    {
+    session()->flush(); // hapus semua session
+    return redirect('/login'); // arahkan ke halaman login
+    }
+
 }
   
