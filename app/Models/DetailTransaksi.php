@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class DetailTransaksi extends Model
 {
     protected $table = 'detail_transaksi';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,17 +16,16 @@ class DetailTransaksi extends Model
         'subtotal',
         'jumlah_beli',
         'harga_saat_beli',
-        'keuntungan_item',
+        'keuntungan_item'
     ];
 
     public function transaksi()
-{
-    return $this->belongsTo(Transaksi::class, 'id_transaksi');
-}
+    {
+        return $this->belongsTo(Transaksi::class, 'id_transaksi');
+    }
 
-public function barang()
-{
-    return $this->belongsTo(Barang::class, 'id_barang');
-}
-
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'id_barang');
+    }
 }

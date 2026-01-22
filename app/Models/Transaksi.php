@@ -8,12 +8,13 @@ class Transaksi extends Model
 {
     protected $table = 'transaksi';
     protected $primaryKey = 'id_transaksi';
-    public $incrementing = false;
-    protected $keyType = 'string';
     public $timestamps = false;
 
+    // ❌ HAPUS SEMUA INI
+    // public $incrementing = false;
+    // protected $keyType = 'string';
+
     protected $fillable = [
-        'id_transaksi',
         'id_pelanggan',
         'tanggal_transaksi',
         'total_bayar',
@@ -22,10 +23,10 @@ class Transaksi extends Model
         'kembalian'
     ];
 
-     public function detailTransaksi()
+    public function detailTransaksi()
     {
         return $this->hasMany(
-            Transaksi::class,
+            DetailTransaksi::class,
             'id_transaksi',
             'id_transaksi'
         );
