@@ -90,9 +90,12 @@
             <label class="mt-2">Kembalian</label>
             <input type="text" id="kembalian" class="form-control" readonly>
 
-            <button type="submit" class="btn btn-success mt-3 w-100">
+            <button type="submit"
+                class="btn btn-success mt-3 w-100"
+                onclick="this.disabled=true; this.form.submit();">
                 💰 Bayar
             </button>
+
         </form>
     </div>
 </div>

@@ -8,7 +8,9 @@ class Transaksi extends Model
 {
     protected $table = 'transaksi';
     protected $primaryKey = 'id_transaksi';
-    public $timestamps = false; 
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
 
     protected $fillable = [
         'id_transaksi',
@@ -17,17 +19,15 @@ class Transaksi extends Model
         'total_bayar',
         'jumlah_bayar',
         'total_keuntungan',
-        'kembalian',
+        'kembalian'
     ];
 
-    
-    public function pelanggan()
+     public function detailTransaksi()
     {
-        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
-    }
-
-    public function detailTransaksi()
-    {
-        return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id_transaksi');
+        return $this->hasMany(
+            Transaksi::class,
+            'id_transaksi',
+            'id_transaksi'
+        );
     }
 }
