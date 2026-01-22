@@ -8,32 +8,25 @@ class Barang extends Model
 {
     protected $table = 'barang';
     protected $primaryKey = 'id_barang';
-
-    public $incrementing = true;
-    protected $keyType = 'int';
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_barang',
         'id_kategori',
         'id_suplier',
-        'stok',
-        'harga_beli',
-        'harga_jual'
+        'harga',
+        'stok'
     ];
 
+    // RELASI KE KATEGORI
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+        return $this->belongsTo(Kategori::class, 'id_kategori');
     }
 
+    // RELASI KE SUPLIER
     public function suplier()
     {
-        return $this->belongsTo(Suplier::class, 'id_suplier', 'id_suplier');
-    }
-
-    public function isMenipis()
-    {
-        return $this->stok <= 5;
+        return $this->belongsTo(Suplier::class, 'id_suplier');
     }
 }

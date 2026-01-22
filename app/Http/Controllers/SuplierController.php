@@ -9,55 +9,27 @@ class SuplierController extends Controller
 {
     public function index()
     {
+        // AMBIL SEMUA DATA SUPLIER
         $suplier = Suplier::all();
+
+        // KIRIM KE VIEW suplier.blade.php
         return view('suplier', compact('suplier'));
     }
 
-    public function tambah_suplier()
+    public function destroy($id)
     {
-        return view('tambah-suplier');
-    }
+        $suplier = Suplier::findOrFail($id);
 
-    public function simpan_suplier(Request $request)
-    {
-        $request->validate([
-            'nama_suplier' => 'required',
-            'no_hp'        => 'required',
-            'alamat'       => 'required',
-        ]);
+        // CEK MASIH DIPAKAI BARANG
+        if ($suplier->barang()->count() > 0) {
+            return redirect()->back()->with(
+                'error',
+                'Data suplier tidak bisa dihapus karena masih terhubung dengan data barang'
+            );
+        }
 
-        Suplier::create([
-            'nama_suplier' => $request->nama_suplier,
-            'no_hp'        => $request->no_hp,
-            'alamat'       => $request->alamat,
-        ]);
+        $suplier->delete();
 
-        return redirect('/suplier')->with('success', 'Data berhasil ditambahkan');
-    }
-
-    public function ubah($id_suplier)
-    {
-        $suplier = Suplier::findOrFail($id_suplier);
-        return view('ubah-suplier', compact('suplier'));
-    }
-
-    public function simpan_ubah(Request $request, $id_suplier)
-    {
-        $request->validate([
-            'nama_suplier' => 'required',
-            'no_hp'        => 'required',
-            'alamat'       => 'required',
-        ]);
-
-        $suplier = Suplier::findOrFail($id_suplier);
-        $suplier->update($request->only('nama_suplier','no_hp','alamat'));
-
-        return redirect('/suplier')->with('success', 'Data berhasil diubah');
-    }
-
-    public function hapus_suplier($id_suplier)
-    {
-        Suplier::findOrFail($id_suplier)->delete();
-        return redirect('/suplier')->with('success', 'Data berhasil dihapus');
+        return redirect()->back()->with('success', 'Data suplier berhasil dihapus');
     }
 }
