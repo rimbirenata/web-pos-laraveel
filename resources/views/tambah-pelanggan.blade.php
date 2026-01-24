@@ -1,30 +1,19 @@
 @extends('layout')
-
 @section('konten')
-<div class="card m-2">
+
+<div class="card">
     <div class="card-header">
-        <h3>Form Tambah Pelanggan</h3>
+        <h4>Tambah Pelanggan</h4>
     </div>
 
     <div class="card-body">
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="/pelanggan/simpan" method="post">
+        <form action="/pelanggan/simpan" method="POST">
             @csrf
 
             <div class="mb-3">
                 <label>ID Pelanggan</label>
                 <input type="text" name="id_pelanggan"
-                    class="form-control @error('id_pelanggan') is-invalid @enderror"
+                    class="form-control"
                     value="{{ old('id_pelanggan') }}">
             </div>
 
@@ -33,20 +22,22 @@
                 <input type="text" name="nama_pelanggan"
                     class="form-control @error('nama_pelanggan') is-invalid @enderror"
                     value="{{ old('nama_pelanggan') }}">
+                @error('nama_pelanggan')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label>No HP</label>
                 <input type="text" name="no_hp"
-                    class="form-control @error('no_hp') is-invalid @enderror"
+                    class="form-control"
                     value="{{ old('no_hp') }}">
             </div>
 
             <div class="mb-3">
                 <label>Alamat</label>
                 <textarea name="alamat"
-                    class="form-control @error('alamat') is-invalid @enderror"
-                    rows="3">{{ old('alamat') }}</textarea>
+                    class="form-control">{{ old('alamat') }}</textarea>
             </div>
 
             <button class="btn btn-primary">Simpan</button>
@@ -54,4 +45,5 @@
         </form>
     </div>
 </div>
+
 @endsection

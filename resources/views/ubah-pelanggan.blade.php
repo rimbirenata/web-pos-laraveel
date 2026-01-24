@@ -1,37 +1,30 @@
 @extends('layout')
-
 @section('konten')
-<div class="card m-2">
+
+<div class="card">
     <div class="card-header">
-        <h3>Form Ubah Pelanggan</h3>
+        <h4>Ubah Pelanggan</h4>
     </div>
 
     <div class="card-body">
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="/pelanggan/ubah/{{ $pelanggan->id_pelanggan }}" method="post">
+        <form action="/pelanggan/ubah/{{ $pelanggan->id_pelanggan }}" method="POST">
             @csrf
             @method('PUT')
 
             <div class="mb-3">
                 <label>ID Pelanggan</label>
-                <input type="text" class="form-control" value="{{ $pelanggan->id_pelanggan }}" readonly>
+                <input type="text" class="form-control"
+                       value="{{ $pelanggan->id_pelanggan }}" readonly>
             </div>
 
             <div class="mb-3">
                 <label>Nama Pelanggan</label>
                 <input type="text" name="nama_pelanggan"
-                    class="form-control"
+                    class="form-control @error('nama_pelanggan') is-invalid @enderror"
                     value="{{ old('nama_pelanggan', $pelanggan->nama_pelanggan) }}">
+                @error('nama_pelanggan')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
@@ -43,7 +36,8 @@
 
             <div class="mb-3">
                 <label>Alamat</label>
-                <textarea name="alamat" class="form-control">{{ old('alamat', $pelanggan->alamat) }}</textarea>
+                <textarea name="alamat"
+                    class="form-control">{{ old('alamat', $pelanggan->alamat) }}</textarea>
             </div>
 
             <button class="btn btn-primary">Update</button>
@@ -51,4 +45,5 @@
         </form>
     </div>
 </div>
+
 @endsection

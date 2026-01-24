@@ -7,70 +7,90 @@ use App\Models\Pelanggan;
 
 class PelangganController extends Controller
 {
-     public function index()
+    // =====================
+    // TAMPIL DATA
+    // =====================
+    public function index()
     {
         $pelanggan = Pelanggan::all();
         return view('pelanggan', compact('pelanggan'));
     }
 
+    // =====================
+    // FORM TAMBAH
+    // =====================
     public function form_tambah_pelanggan()
     {
-        return view('tambah-pelanggan');
+        return view('pelanggan-tambah',compact('pelanggan'));
     }
 
+    // =====================
+    // SIMPAN DATA BARU
+    // =====================
     public function simpan_pelanggan(Request $request)
     {
-        $request->validate([
-            'id_pelanggan'   => 'required|unique:pelanggan,id_pelanggan',
-            'nama_pelanggan' => 'required',
-            'no_hp'          => 'required|numeric',
-            'alamat'         => 'required',
-        ],[
-            'required' => ':attribute wajib diisi',
-            'numeric'  => ':attribute harus berupa angka',
-            'unique'   => ':attribute sudah digunakan',
-        ]);
+        $request->validate(
+            [
+                'id_pelanggan'   => 'required|unique:pelanggan,id_pelanggan',
+                'nama_pelanggan' => [
+                    'required',
+                    'regex:/^[A-Za-z\s]+$/'
+                ],
+                'no_hp'          => 'required|numeric',
+                'alamat'         => 'required'
+            ],
+            [
+                'nama_pelanggan.regex' =>
+                'Nama pelanggan tidak boleh mengandung angka atau simbol (/, . , ! ?)'
+            ]
+        );
 
         Pelanggan::create($request->all());
+
         return redirect('/pelanggan')->with('success','Data berhasil disimpan');
     }
 
-    public function ubah($id)
+    // =====================
+    // FORM UBAH
+    // =====================
+    public function ubah($id_pelanggan)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        return view('ubah-pelanggan', compact('pelanggan'));
+        $pelanggan = Pelanggan::findOrFail($id_pelanggan);
+        return view('pelanggan.ubah', compact('pelanggan'));
     }
 
-    public function simpan_ubah(Request $request, $id)
+    // =====================
+    // SIMPAN UBAH
+    // =====================
+    public function simpan_ubah(Request $request, $id_pelanggan)
     {
-        $request->validate([
-            'nama_pelanggan' => 'required',
-            'no_hp'          => 'required|numeric',
-            'alamat'         => 'required',
-        ],[
-            'required' => ':attribute wajib diisi',
-            'numeric'  => ':attribute harus berupa angka',
-        ]);
+        $request->validate(
+            [
+                'nama_pelanggan' => [
+                    'required',
+                    'regex:/^[A-Za-z\s]+$/'
+                ],
+                'no_hp'  => 'required|numeric',
+                'alamat' => 'required'
+            ],
+            [
+                'nama_pelanggan.regex' =>
+                'Nama pelanggan tidak boleh mengandung angka atau simbol (/, . , ! ?)'
+            ]
+        );
 
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->update($request->all());
+        Pelanggan::where('id_pelanggan', $id_pelanggan)
+            ->update($request->only(['nama_pelanggan','no_hp','alamat']));
 
         return redirect('/pelanggan')->with('success','Data berhasil diubah');
     }
 
-    public function hapus_pelanggan($id)
+    // =====================
+    // HAPUS
+    // =====================
+    public function hapus_pelanggan($id_pelanggan)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
-        $pelanggan->delete();
-
+        Pelanggan::where('id_pelanggan', $id_pelanggan)->delete();
         return redirect('/pelanggan')->with('success','Data berhasil dihapus');
     }
-
-    // ✨ Tambahkan method cari di bawah ini
-    public function cari($hp)
-    {
-        $pelanggan = Pelanggan::where('no_hp', $hp)->first();
-        return response()->json($pelanggan ? $pelanggan : null);
-    }
 }
-

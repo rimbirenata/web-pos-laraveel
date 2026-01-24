@@ -3,42 +3,41 @@
 
 <h4 class="mb-3">Data Pelanggan</h4>
 
+@if(session('success'))
+<div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
 <a href="/pelanggan/tambah" class="btn btn-primary btn-sm mb-3">
     Tambah Data Pelanggan
 </a>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-light">
+<table class="table table-bordered">
+    <thead>
         <tr>
-            <th>ID Pelanggan</th>
-            <th>Nama Pelanggan</th>
+            <th>ID</th>
+            <th>Nama</th>
             <th>No HP</th>
             <th>Alamat</th>
             <th width="150">Aksi</th>
         </tr>
     </thead>
-
     <tbody>
-        @forelse ($pelanggan as $item)
+        @forelse ($pelanggan as $p)
         <tr>
-            <td>{{ $item->id_pelanggan }}</td>
-            <td>{{ $item->nama_pelanggan }}</td>
-            <td>{{ $item->no_hp }}</td>
-            <td>{{ $item->alamat }}</td>
+            <td>{{ $p->id_pelanggan }}</td>
+            <td>{{ $p->nama_pelanggan }}</td>
+            <td>{{ $p->no_hp }}</td>
+            <td>{{ $p->alamat }}</td>
             <td>
-                <a href="/pelanggan/{{ $item->id_pelanggan }}/ubah"
-                   class="btn btn-warning btn-sm">
-                    Ubah
-                </a>
+                <a href="/pelanggan/{{ $p->id_pelanggan }}/ubah"
+                   class="btn btn-warning btn-sm">Ubah</a>
 
-                <form action="/pelanggan/hapus/{{ $item->id_pelanggan }}"
-                      method="POST"
-                      class="d-inline">
+                <form action="/pelanggan/hapus/{{ $p->id_pelanggan }}"
+                      method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit"
-                            class="btn btn-danger btn-sm"
-                            onclick="return confirm('Yakin hapus data pelanggan {{ $item->nama_pelanggan }} ?')">
+                    <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('Yakin hapus {{ $p->nama_pelanggan }} ?')">
                         Hapus
                     </button>
                 </form>
