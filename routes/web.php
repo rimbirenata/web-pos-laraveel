@@ -56,32 +56,35 @@ Route::get('/dashboard', [HalamanController::class, 'index']);
 
 
 // menampilkan barang
-Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
-Route::get('/barang/tambah', [BarangController::class, 'tambah'])->name('barang.tambah');
-Route::post('/barang/simpan', [BarangController::class, 'simpan'])->name('barang.simpan');
-Route::get('/barang/ubah/{id_barang}', [BarangController::class, 'ubah'])->name('barang.ubah');
-Route::put('/barang/simpan/{id_barang}', [BarangController::class, 'simpan_ubah'])->name('barang.simpan_ubah');
-Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])->name('barang.hapus');
+Route::get('/barang', [BarangController::class, 'index'])->name('barang-index');
+Route::get('/barang/tambah', [BarangController::class, 'tambah'])->name('barang-tambah');
+Route::post('/barang/simpan', [BarangController::class, 'simpan'])->name('barang-simpan');
 
+Route::get('/barang/edit/{id_barang}', [BarangController::class, 'edit'])->name('barang-edit');
+Route::put('/barang/update/{id_barang}', [BarangController::class, 'update'])->name('barang-update');
 
-
-
-
-
+Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])->name('barang-hapus');
 
 
 // ini punya suplier ya
-route::get('/suplier',[SuplierController::class,'index']);
-route::get('/suplier/tambah',[SuplierController::class,'tambah_suplier']);
-route::post('/suplier/simpan',[SuplierController::class,'simpan_suplier']);
-route::get('/suplier/{id_suplier}/ubah',[SuplierController::class,'ubah']);
-Route::put('/suplier/ubah/{id_suplier}', [SuplierController::class,'simpan_ubah']);
 
-Route::delete(
-    '/suplier/hapus/{id_suplier}',
-    [SuplierController::class,'hapus_suplier']
-)->name('suplier.hapus');
+Route::get('/suplier', [SuplierController::class, 'index'])
+    ->name('suplier.index');
 
+Route::get('/suplier/tambah', [SuplierController::class, 'tambah'])
+    ->name('suplier.tambah');
+
+Route::post('/suplier/simpan', [SuplierController::class, 'simpan'])
+    ->name('suplier.simpan');
+
+Route::get('/suplier/{id}/ubah', [SuplierController::class, 'ubah'])
+    ->name('suplier.ubah');
+
+Route::put('/suplier/{id}', [SuplierController::class, 'simpan_ubah'])
+    ->name('suplier.update');
+
+Route::delete('/suplier/{id}', [SuplierController::class, 'hapus_suplier'])
+    ->name('suplier.hapus');
 
 // ini kategori ya
 

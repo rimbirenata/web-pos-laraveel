@@ -6,6 +6,8 @@ use App\Models\Suplier;
 use Illuminate\Http\Request;
 
 class SuplierController extends Controller
+
+    
 {
     public function index()
     {
@@ -15,48 +17,48 @@ class SuplierController extends Controller
 
     public function tambah()
     {
-        return view('suplier_tambah');
+        return view('tambah-suplier');
     }
 
     public function simpan(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'nama_suplier' => 'required',
-            'no_hp' => 'required',
-            'alamat' => 'required',
+            'no_hp'        => 'required',
+            'alamat'       => 'required',
         ]);
 
-        Suplier::create($data);
+        Suplier::create($request->all());
 
-        return redirect('/suplier')
+        return redirect()->route('suplier.index')
             ->with('success', 'Suplier berhasil ditambahkan');
     }
 
-    public function ubah($id_suplier)
+    public function ubah($id)
     {
-        $suplier = Suplier::findOrFail($id_suplier);
-        return view('suplier_ubah', compact('suplier'));
+        $suplier = Suplier::findOrFail($id);
+        return view('ubah-suplier', compact('suplier'));
     }
 
-    public function simpan_ubah(Request $request, $id_suplier)
+    public function simpan_ubah(Request $request, $id)
     {
-        $data = $request->validate([
+        $request->validate([
             'nama_suplier' => 'required',
-            'no_hp' => 'required',
-            'alamat' => 'required',
+            'no_hp'        => 'required',
+            'alamat'       => 'required',
         ]);
 
-        Suplier::findOrFail($id_suplier)->update($data);
+        Suplier::findOrFail($id)->update($request->all());
 
-        return redirect('/suplier')
+        return redirect()->route('suplier.index')
             ->with('success', 'Suplier berhasil diubah');
     }
 
-    public function hapus_suplier($id_suplier)
+    public function hapus_suplier($id)
     {
-        Suplier::findOrFail($id_suplier)->delete();
+        Suplier::findOrFail($id)->delete();
 
-        return redirect('/suplier')
+        return redirect()->route('suplier.index')
             ->with('success', 'Suplier berhasil dihapus');
     }
 }

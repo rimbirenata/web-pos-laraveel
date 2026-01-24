@@ -1,72 +1,37 @@
 @extends('layout')
 
 @section('konten')
-<div class="card shadow m-2">
-    <div class="card-header text-body">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5>📦 Data Barang</h5>
+<a href="{{ route('barang-tambah') }}" class="btn btn-primary mb-2">➕ Tambah Barang</a>
 
-            <a href="{{ route('barang.tambah') }}" class="btn btn-info btn-sm">
-                Tambah Barang
-            </a>
-        </div>
-    </div>
+<table class="table table-bordered">
+    <tr>
+        <th>Nama Barang</th>
+        <th>Kategori</th>
+        <th>Suplier</th>
+        <th>Stok</th>
+        <th>Harga Beli</th>
+        <th>Harga Jual</th>
+        <th>Aksi</th>
+    </tr>
 
-    <div class="card-body">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+    @foreach($barang as $b)
+    <tr>
+        <td>{{ $b->nama_barang }}</td>
+        <td>{{ $b->kategori->nama_kategori }}</td>
+        <td>{{ $b->suplier->nama_suplier }}</td>
+         <td>{{ $b->stok }}</td>
+        <td>Rp {{ number_format($b->harga_beli) }}</td>
+        <td>Rp {{ number_format($b->harga_jual) }}</td>
+        <td>
+            <a href="{{ route('barang-edit', $b->id_barang) }}" class="btn btn-warning btn-sm">Ubah</a>
 
-        <table class="table table-bordered table-striped">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Kategori</th>
-                    <th>Suplier</th>
-                    <th>Stok</th>
-                    <th>Harga Beli</th>
-                    <th>Harga Jual</th>
-                    <th width="150">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($barang as $item)
-                <tr>
-                    <td>{{ $item->id_barang }}</td>
-                    <td>{{ $item->nama_barang }}</td>
-                    <td>{{ $item->kategori->nama_kategori ?? '-' }}</td>
-                    <td>{{ $item->suplier->nama_suplier ?? '-' }}</td>
-                    <td>{{ $item->stok }}</td>
-                    <td>Rp {{ number_format($item->harga_beli,0,',','.') }}</td>
-                    <td>Rp {{ number_format($item->harga_jual,0,',','.') }}</td>
-                    <td>
-                        <a href="{{ route('barang.ubah', $item->id_barang) }}"
-                           class="btn btn-warning btn-sm">Ubah</a>
-
-                        <form action="{{ route('barang.hapus', $item->id_barang) }}"
-                              method="POST"
-                              class="d-inline"
-                              onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="text-center text-muted">
-                        Data barang masih kosong
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-</div>
+            <form action="{{ route('barang-hapus', $b->id_barang) }}" method="POST" style="display:inline">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-danger btn-sm">Hapus</button>
+            </form>
+        </td>
+    </tr>
+    @endforeach
+</table>
 @endsection

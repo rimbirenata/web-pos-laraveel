@@ -2,73 +2,68 @@
 
 @section('konten')
 <div class="card shadow m-2">
-    <div class="card-header bg-primary text-white">
-        <h5>Data Suplier</h5>
+    <div class="card-header bg-primary d-flex justify-content-between align-items-center">
+        <h5 class="text-white mb-0">Data Suplier</h5>
+        <a href="{{ route('suplier.tambah') }}" class="btn btn-info btn-sm">
+            Tambah Suplier
+        </a>
     </div>
 
     <div class="card-body">
 
-        {{-- PESAN --}}
-                @if(session('success'))
+        {{-- ALERT SUCCESS --}}
+        @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th width="50">No</th>
                     <th>Nama Suplier</th>
                     <th>Alamat</th>
                     <th>No HP</th>
-                    <th>Aksi</th>
+                    <th width="150">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($suplier as $s)
+                @forelse ($suplier as $s)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $s->nama_suplier }}</td>
                     <td>{{ $s->alamat }}</td>
                     <td>{{ $s->no_hp }}</td>
-                            <td>
-                <a href="{{ url('/suplier/'.$s->id_suplier.'/ubah') }}"
-                    class="btn btn-warning btn-sm">
-                    Ubah
-                </a>
+                    <td>
+                        {{-- TOMBOL UBAH --}}
+                        <a href="{{ route('suplier.ubah', $s->id_suplier) }}"
+                           class="btn btn-warning btn-sm">
+                            Ubah
+                        </a>
 
-                <form action="{{ route('suplier.hapus', $s->id_suplier) }}"
-                    method="POST"
-                    style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm"
-                        onclick="return confirm('Yakin hapus suplier ini?')">
-                        Hapus
-                    </button>
-                </form>
-            </td>
-
-                </tr>
-                @endforeach
-
-                @if($suplier->count() == 0)
-                <tr>
-                    <td colspan="5" class="text-center">
-                        Data suplier kosong
+                        {{-- TOMBOL HAPUS --}}
+                        <form action="{{ route('suplier.hapus', $s->id_suplier) }}"
+                              method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin hapus data ini?')">
+                                Hapus
+                            </button>
+                        </form>
                     </td>
                 </tr>
-                @endif
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center">
+                        Data suplier masih kosong
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
+
     </div>
 </div>
 @endsection

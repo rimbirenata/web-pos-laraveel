@@ -14,17 +14,16 @@ class Barang extends Model
         'nama_barang',
         'id_kategori',
         'id_suplier',
-        'harga',
-        'stok'
+        'stok',
+        'harga_beli',
+        'harga_jual'
     ];
 
-    // RELASI KE KATEGORI
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
     }
 
-    // RELASI KE SUPLIER
     public function suplier()
     {
         return $this->belongsTo(Suplier::class, 'id_suplier');

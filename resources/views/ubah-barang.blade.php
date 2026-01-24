@@ -1,98 +1,102 @@
 @extends('layout')
 
 @section('konten')
-<div class="card m-2">
-    <div class="card-header">
-        <h3>Form Ubah Data Barang</h3>
+<div class="card shadow m-3">
+    <div class="card-header bg-warning text-dark">
+        ✏️ Ubah Barang
     </div>
 
     <div class="card-body">
+
+        {{-- ERROR VALIDASI --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                    @foreach ($errors->all() as $e)
+                        <li>{{ $e }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
 
-        <form id="formBarangubah"
-              action="{{ route('barang.simpan_ubah', $barang->id_barang) }}"
-              method="POST">
+        <form action="{{ route('barang-update', $barang->id_barang) }}" method="POST">
             @csrf
             @method('PUT')
 
+            {{-- NAMA BARANG --}}
             <div class="mb-3">
-                <label>ID Barang</label>
-                <input type="text" class="form-control"
-                       value="{{ $barang->id_barang }}" disabled>
-                <input type="hidden" name="id_barang" value="{{ $barang->id_barang }}">
-            </div>
-
-            <div class="mb-2">
                 <label>Nama Barang</label>
-                <input type="text" name="nama_barang" class="form-control"
-                       value="{{ $barang->nama_barang }}" required>
+                <input type="text"
+                       name="nama_barang"
+                       class="form-control"
+                       value="{{ $barang->nama_barang }}"
+                       required>
             </div>
 
-            <div class="mb-2">
+            {{-- KATEGORI --}}
+            <div class="mb-3">
                 <label>Kategori</label>
                 <select name="id_kategori" class="form-control" required>
+                    <option value="">-- Pilih --</option>
                     @foreach ($kategori as $k)
                         <option value="{{ $k->id_kategori }}"
-                            @if($k->id_kategori == $barang->id_kategori) selected @endif>
+                            {{ $barang->id_kategori == $k->id_kategori ? 'selected' : '' }}>
                             {{ $k->nama_kategori }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="mb-2">
+            {{-- SUPLIER --}}
+            <div class="mb-3">
                 <label>Suplier</label>
                 <select name="id_suplier" class="form-control" required>
+                    <option value="">-- Pilih --</option>
                     @foreach ($suplier as $s)
                         <option value="{{ $s->id_suplier }}"
-                            @if($s->id_suplier == $barang->id_suplier) selected @endif>
+                            {{ $barang->id_suplier == $s->id_suplier ? 'selected' : '' }}>
                             {{ $s->nama_suplier }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="mb-2">
+            {{-- STOK --}}
+            <div class="mb-3">
                 <label>Stok</label>
-                <input type="number" name="stok" class="form-control"
-                       value="{{ $barang->stok }}" required>
+                <input type="number"
+                       name="stok"
+                       class="form-control"
+                       value="{{ $barang->stok }}"
+                       required>
             </div>
 
-            <div class="mb-2">
+            {{-- HARGA BELI --}}
+            <div class="mb-3">
                 <label>Harga Beli</label>
-                <input type="number" name="harga_beli" id="harga_beli_edit" class="form-control"
-                       value="{{ $barang->harga_beli }}" required>
+                <input type="number"
+                       name="harga_beli"
+                       class="form-control"
+                       value="{{ $barang->harga_beli }}"
+                       required>
             </div>
 
+            {{-- HARGA JUAL --}}
             <div class="mb-3">
                 <label>Harga Jual</label>
-                <input type="number" name="harga_jual" id="harga_jual_edit" class="form-control"
-                       value="{{ $barang->harga_jual }}" required>
+                <input type="number"
+                       name="harga_jual"
+                       class="form-control"
+                       value="{{ $barang->harga_jual }}"
+                       required>
             </div>
 
-            <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="{{ route('barang.index') }}" class="btn btn-secondary">Kembali</a>
+            <button class="btn btn-warning">Update</button>
+            <a href="{{ route('barang-index') }}" class="btn btn-secondary">
+                Kembali
+            </a>
         </form>
+
     </div>
 </div>
-
-<script>
-document.getElementById('formBarangubah').addEventListener('submit', function(e) {
-    const hargaBeli = parseFloat(document.getElementById('harga_beli_edit').value);
-    const hargaJual = parseFloat(document.getElementById('harga_jual_edit').value);
-
-    if (hargaJual < hargaBeli) {
-        e.preventDefault();
-        alert('Harga jual tidak boleh lebih rendah dari harga beli!');
-    }
-});
-</script>
 @endsection

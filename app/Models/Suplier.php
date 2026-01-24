@@ -8,17 +8,13 @@ class Suplier extends Model
 {
     protected $table = 'suplier';
     protected $primaryKey = 'id_suplier';
+    public $incrementing = true;
+    protected $keyType = 'int';
     public $timestamps = false;
 
     protected $fillable = [
         'nama_suplier',
-        'alamat',
-        'no_hp'
+        'no_hp',
+        'alamat'
     ];
-
-    // RELASI KE BARANG
-    public function barang()
-    {
-        return $this->hasMany(Barang::class, 'id_suplier');
-    }
 }

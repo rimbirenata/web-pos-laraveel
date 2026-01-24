@@ -1,45 +1,59 @@
 @extends('layout')
 
 @section('konten')
-<div class="card m-2">
-    <div class="card-header">
-        <h3>Form Tambah Data Suplier</h3>
+<div class="card shadow m-3">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Tambah Suplier</h5>
     </div>
 
     <div class="card-body">
-        <form action="/suplier/simpan" method="POST">
+
+        {{-- ERROR VALIDASI --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('suplier.simpan') }}" method="POST">
             @csrf
 
-            <div class="row mb-3">
-                <label class="col-3 col-form-label">NAMA SUPLIER</label>
-                <div class="col-9">
-                    <input type="text" name="nama_suplier" class="form-control" required>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Nama Suplier</label>
+                <input type="text"
+                       name="nama_suplier"
+                       class="form-control"
+                       value="{{ old('nama_suplier') }}"
+                       required>
             </div>
 
-            <div class="row mb-3">
-                <label class="col-3 col-form-label">NO HP</label>
-                <div class="col-9">
-                    <input type="text" name="no_hp" class="form-control" required>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">No HP</label>
+                <input type="text"
+                       name="no_hp"
+                       class="form-control"
+                       value="{{ old('no_hp') }}"
+                       required>
             </div>
 
-            <div class="row mb-3">
-                <label class="col-3 col-form-label">ALAMAT</label>
-                <div class="col-9">
-                    <input type="text" name="alamat" class="form-control" required>
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Alamat</label>
+                <textarea name="alamat"
+                          class="form-control"
+                          rows="3"
+                          required>{{ old('alamat') }}</textarea>
             </div>
 
-            <div class="row">
-                <div class="col-3"></div>
-                <div class="col-9">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                    <a href="/suplier" class="btn btn-warning">Kembali</a>
-                </div>
-            </div>
-
+            <button class="btn btn-success">Simpan</button>
+            <a href="{{ route('suplier.index') }}" class="btn btn-secondary">
+                Kembali
+            </a>
         </form>
+
     </div>
 </div>
 @endsection

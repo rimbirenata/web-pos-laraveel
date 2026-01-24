@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Suplier;
+use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
@@ -23,36 +23,22 @@ class BarangController extends Controller
         ]);
     }
 
-    // SIMPAN
     public function simpan(Request $request)
-{
-    $request->validate([
-        'nama_barang' => 'required',
-        'id_kategori' => 'required',
-        'id_suplier'  => 'nullable',
-        'stok'        => 'required|integer|min:0',
-        'harga_beli'  => 'required|numeric|min:0',
-        'harga_jual'  => 'required|numeric|gte:harga_beli',
-    ]);
+    {
+        $request->validate([
+            'nama_barang' => 'required',
+            'id_kategori' => 'required',
+            'id_suplier'  => 'required',
+            'stok'        => 'required|numeric',
+            'harga_beli'  => 'required|numeric',
+            'harga_jual'  => 'required|numeric',
+        ]);
 
-    $suplier = Suplier::find($request->id_suplier);
+        Barang::create($request->all());
+        return redirect()->route('barang-index');
+    }
 
-    Barang::create([
-        'nama_barang'  => $request->nama_barang,
-        'id_kategori'  => $request->id_kategori,
-        'id_suplier'   => $suplier?->id_suplier,
-        'nama_suplier' => $suplier?->nama_suplier, // 🔥 PENTING
-        'stok'         => $request->stok,
-        'harga_beli'   => $request->harga_beli,
-        'harga_jual'   => $request->harga_jual,
-    ]);
-
-    return redirect()->route('barang.index')
-        ->with('success', 'Barang berhasil disimpan');
-}
-
-
-    public function ubah($id_barang)
+    public function edit($id_barang)
     {
         return view('ubah-barang', [
             'barang'   => Barang::findOrFail($id_barang),
@@ -61,36 +47,24 @@ class BarangController extends Controller
         ]);
     }
 
-    // SIMPAN UBAH
-    public function simpan_ubah(Request $request, $id_barang)
+    public function update(Request $request, $id_barang)
     {
         $request->validate([
             'nama_barang' => 'required',
             'id_kategori' => 'required',
             'id_suplier'  => 'required',
-            'stok'        => 'required|integer|min:0',
-            'harga_beli'  => 'required|numeric|min:0',
-            'harga_jual'  => 'required|numeric|gte:harga_beli',
+            'stok'        => 'required|numeric',
+            'harga_beli'  => 'required|numeric',
+            'harga_jual'  => 'required|numeric',
         ]);
 
-        Barang::findOrFail($id_barang)->update([
-            'nama_barang' => $request->nama_barang,
-            'id_kategori' => $request->id_kategori,
-            'id_suplier'  => $request->id_suplier,
-            'stok'        => $request->stok,
-            'harga_beli'  => $request->harga_beli,
-            'harga_jual'  => $request->harga_jual,
-        ]);
-
-        return redirect()->route('barang.index')
-            ->with('success','Barang berhasil diubah');
+        Barang::findOrFail($id_barang)->update($request->all());
+        return redirect()->route('barang-index');
     }
 
     public function hapus($id_barang)
     {
         Barang::findOrFail($id_barang)->delete();
-
-        return redirect()->route('barang.index')
-            ->with('success','Barang berhasil dihapus');
+        return redirect()->route('barang-index');
     }
 }
