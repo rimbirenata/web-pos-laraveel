@@ -9,17 +9,18 @@
     <div class="card-body">
 
         {{-- PESAN --}}
+                @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
         @if(session('error'))
             <div class="alert alert-danger">
                 {{ session('error') }}
             </div>
         @endif
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
 
         <table class="table table-bordered">
             <thead>
@@ -38,16 +39,24 @@
                     <td>{{ $s->nama_suplier }}</td>
                     <td>{{ $s->alamat }}</td>
                     <td>{{ $s->no_hp }}</td>
-                    <td>
-                        <form action="{{ route('suplier.destroy', $s->id_suplier) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin hapus suplier ini?')">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
+                            <td>
+                <a href="{{ url('/suplier/'.$s->id_suplier.'/ubah') }}"
+                    class="btn btn-warning btn-sm">
+                    Ubah
+                </a>
+
+                <form action="{{ route('suplier.hapus', $s->id_suplier) }}"
+                    method="POST"
+                    style="display:inline">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('Yakin hapus suplier ini?')">
+                        Hapus
+                    </button>
+                </form>
+            </td>
+
                 </tr>
                 @endforeach
 

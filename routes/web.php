@@ -76,7 +76,11 @@ route::get('/suplier/tambah',[SuplierController::class,'tambah_suplier']);
 route::post('/suplier/simpan',[SuplierController::class,'simpan_suplier']);
 route::get('/suplier/{id_suplier}/ubah',[SuplierController::class,'ubah']);
 Route::put('/suplier/ubah/{id_suplier}', [SuplierController::class,'simpan_ubah']);
-route::delete('/suplier/hapus/{id_suplier}',[SuplierController::class,'hapus_suplier']);
+
+Route::delete(
+    '/suplier/hapus/{id_suplier}',
+    [SuplierController::class,'hapus_suplier']
+)->name('suplier.hapus');
 
 
 // ini kategori ya

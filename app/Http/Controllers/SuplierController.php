@@ -9,27 +9,54 @@ class SuplierController extends Controller
 {
     public function index()
     {
-        // AMBIL SEMUA DATA SUPLIER
         $suplier = Suplier::all();
-
-        // KIRIM KE VIEW suplier.blade.php
         return view('suplier', compact('suplier'));
     }
 
-    public function destroy($id)
+    public function tambah()
     {
-        $suplier = Suplier::findOrFail($id);
+        return view('suplier_tambah');
+    }
 
-        // CEK MASIH DIPAKAI BARANG
-        if ($suplier->barang()->count() > 0) {
-            return redirect()->back()->with(
-                'error',
-                'Data suplier tidak bisa dihapus karena masih terhubung dengan data barang'
-            );
-        }
+    public function simpan(Request $request)
+    {
+        $data = $request->validate([
+            'nama_suplier' => 'required',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+        ]);
 
-        $suplier->delete();
+        Suplier::create($data);
 
-        return redirect()->back()->with('success', 'Data suplier berhasil dihapus');
+        return redirect('/suplier')
+            ->with('success', 'Suplier berhasil ditambahkan');
+    }
+
+    public function ubah($id_suplier)
+    {
+        $suplier = Suplier::findOrFail($id_suplier);
+        return view('suplier_ubah', compact('suplier'));
+    }
+
+    public function simpan_ubah(Request $request, $id_suplier)
+    {
+        $data = $request->validate([
+            'nama_suplier' => 'required',
+            'no_hp' => 'required',
+            'alamat' => 'required',
+        ]);
+
+        Suplier::findOrFail($id_suplier)->update($data);
+
+        return redirect('/suplier')
+            ->with('success', 'Suplier berhasil diubah');
+    }
+
+    public function hapus_suplier($id_suplier)
+    {
+        Suplier::findOrFail($id_suplier)->delete();
+
+        return redirect('/suplier')
+            ->with('success', 'Suplier berhasil dihapus');
     }
 }
