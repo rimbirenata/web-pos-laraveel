@@ -4,90 +4,111 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
-use App\Models\Barang;
-use App\Models\Transaksi;
-use App\Models\DetailTransaksi;
-use Illuminate\Support\Facades\DB;
 
 class PelangganController extends Controller
 {
+    // =====================
+    // TAMPIL DATA
+    // =====================
     public function index()
     {
         $pelanggan = Pelanggan::all();
-        return view('pelanggan.index', compact('pelanggan'));
+        return view('pelanggan', compact('pelanggan'));
     }
 
-    public function proses(Request $request)
+    // =====================
+    // FORM TAMBAH
+    // =====================
+    public function form_tambah_pelanggan()
     {
-        // 1️⃣ Validasi form
-        $request->validate([
-            'keranjang' => 'required|array',
-            'total_bayar' => 'required|numeric|min:1',
-            'jumlah_bayar' => 'required|numeric|min:1',
+        return view('tambah-pelanggan');
+    }
+
+    // =====================
+    // SIMPAN DATA BARU
+    // =====================
+    public function simpan_pelanggan(Request $request)
+    {
+        $request->validate(
+            [
+                'id_pelanggan'   => 'required|numeric|unique:pelanggan,id_pelanggan',
+                'nama_pelanggan' => 'required|string',
+                'no_hp'          => 'required|regex:/^[0-9]{10,13}$/',
+                'alamat'         => 'required'
+            ],
+            [
+                'id_pelanggan.required' => 'ID Pelanggan wajib diisi',
+                'id_pelanggan.numeric'  => 'ID Pelanggan hanya boleh angka (tidak boleh huruf atau simbol)',
+                'id_pelanggan.unique'   => 'ID Pelanggan sudah digunakan',
+
+                'nama_pelanggan.required' => 'Nama Pelanggan wajib diisi',
+
+                'no_hp.required' => 'Nomor HP wajib diisi',
+                'no_hp.regex'    => 'Nomor HP harus berupa angka 10–13 digit',
+
+                'alamat.required' => 'Alamat wajib diisi'
+            ]
+        );
+
+        Pelanggan::create([
+            'id_pelanggan'   => $request->id_pelanggan,
+            'nama_pelanggan' => $request->nama_pelanggan,
+            'no_hp'          => $request->no_hp,
+            'alamat'         => $request->alamat,
         ]);
 
-        // 2️⃣ VALIDASI UANG KURANG
-        if ($request->jumlah_bayar < $request->total_bayar) {
-            return back()->with('error', '❌ Uang tidak mencukupi');
-        }
+        return redirect('/pelanggan')
+            ->with('success', 'Data pelanggan berhasil ditambahkan');
+    }
 
-        DB::beginTransaction();
+    // =====================
+    // FORM UBAH
+    // =====================
+    public function ubah($id_pelanggan)
+    {
+        $pelanggan = Pelanggan::findOrFail($id_pelanggan);
+        return view('ubah-pelanggan', compact('pelanggan'));
+    }
 
-        try {
-            // SIMPAN TRANSAKSI
-            $transaksi = Transaksi::create([
-                'id_pelanggan' => $request->id_pelanggan,
-                'tanggal_transaksi' => now(),
-                'total_bayar' => $request->total_bayar,
-                'jumlah_bayar' => $request->jumlah_bayar,
-                'kembalian' => $request->jumlah_bayar - $request->total_bayar,
-                'total_keuntungan' => 0
-            ]);
+    // =====================
+    // SIMPAN PERUBAHAN
+    // =====================
+    public function simpan_ubah(Request $request, $id_pelanggan)
+    {
+        $request->validate(
+            [
+                'nama_pelanggan' => 'required|string',
+                'no_hp'          => 'required|regex:/^[0-9]{10,13}$/',
+                'alamat'         => 'required'
+            ],
+            [
+                'nama_pelanggan.required' => 'Nama Pelanggan wajib diisi',
+                'no_hp.required'          => 'Nomor HP wajib diisi',
+                'no_hp.regex'             => 'Nomor HP harus berupa angka 10–13 digit',
+                'alamat.required'         => 'Alamat wajib diisi'
+            ]
+        );
 
-            $totalUntung = 0;
+        $pelanggan = Pelanggan::findOrFail($id_pelanggan);
 
-            foreach ($request->keranjang as $k) {
-                $barang = Barang::find($k['id']);
+        $pelanggan->update([
+            'nama_pelanggan' => $request->nama_pelanggan,
+            'no_hp'          => $request->no_hp,
+            'alamat'         => $request->alamat,
+        ]);
 
-                if (!$barang || $barang->stok < $k['jumlah']) {
-                    throw new \Exception('Stok tidak mencukupi');
-                }
+        return redirect('/pelanggan')
+            ->with('success', 'Data pelanggan berhasil diubah');
+    }
 
-                $subtotal = $barang->harga_jual * $k['jumlah'];
-                $untung = ($barang->harga_jual - $barang->harga_beli) * $k['jumlah'];
+    // =====================
+    // HAPUS
+    // =====================
+    public function hapus_pelanggan($id_pelanggan)
+    {
+        Pelanggan::findOrFail($id_pelanggan)->delete();
 
-                DetailTransaksi::create([
-                    'id_transaksi' => $transaksi->id_transaksi,
-                    'id_barang' => $barang->id_barang,
-                    'jumlah' => $k['jumlah'],
-                    'jumlah_beli' => $k['jumlah'],
-                    'harga_saat_beli' => $barang->harga_jual,
-                    'subtotal' => $subtotal,
-                    'keuntungan_item' => $untung
-                ]);
-
-                $barang->stok -= $k['jumlah'];
-                $barang->save();
-
-                $totalUntung += $untung;
-            }
-
-            $transaksi->update([
-                'total_keuntungan' => $totalUntung
-            ]);
-
-            DB::commit();
-
-            return view('transaksi_struk', [
-                'detail' => $request->keranjang,
-                'total' => $request->total_bayar,
-                'bayar' => $request->jumlah_bayar,
-                'kembalian' => $request->jumlah_bayar - $request->total_bayar
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', $e->getMessage());
-        }
+        return redirect('/pelanggan')
+            ->with('success', 'Data pelanggan berhasil dihapus');
     }
 }
