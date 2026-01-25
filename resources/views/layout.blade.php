@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <title>Penjualan Kabasa</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 
@@ -19,9 +16,12 @@
     <div class="d-flex align-items-center gap-2">
         <!-- NOTIF STOK -->
         <div class="dropdown">
-            <button class="btn btn-outline-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+            <button type="button"
+                    class="btn btn-outline-warning btn-sm dropdown-toggle"
+                    data-bs-toggle="dropdown">
                 📉 <span class="badge bg-danger">{{ $stokMenipis->count() }}</span>
             </button>
+
             <ul class="dropdown-menu dropdown-menu-end">
                 @forelse($stokMenipis as $item)
                     <li class="dropdown-item">
@@ -35,7 +35,9 @@
         </div>
 
         <!-- MODE -->
-        <button id="themeToggle" class="btn btn-outline-light btn-sm">🌙 Dark Mode</button>
+        <button type="button" id="themeToggle" class="btn btn-outline-light btn-sm">
+            🌙 Dark Mode
+        </button>
     </div>
 </nav>
 
@@ -51,12 +53,14 @@
             <li><a href="/transaksi" class="nav-link">💰 Transaksi</a></li>
             <li><a href="/laporan-penjualan" class="nav-link">📊 Laporan</a></li>
             <li><a href="/profile" class="nav-link">👤 Profile</a></li>
+
             <li class="mt-3">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="btn btn-danger w-100">Logout</button>
+                    <button type="submit" class="btn btn-danger w-100">
+                        Logout
+                    </button>
                 </form>
-
             </li>
         </ul>
     </div>
@@ -69,10 +73,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- DARK MODE -->
 <script>
 const btn = document.getElementById('themeToggle');
 const body = document.body;
+
 const theme = localStorage.getItem('theme') || 'light';
 body.setAttribute('data-bs-theme', theme);
 btn.innerText = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';

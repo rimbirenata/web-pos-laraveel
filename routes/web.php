@@ -96,13 +96,14 @@ Route::put('/kategori/ubah/{id_kategori}', [KategoriController::class,'simpan_ub
 route::delete('/kategori/hapus/{id_kategori}',[KategoriController::class,'hapus_kategori']);
 
 // ini pelanggan ya
-route::get('/pelanggan',[PelangganController::class,'index']);
-route::get('/pelanggan/tambah',[PelangganController::class,'form_tambah_pelanggan']);
-route::post('/pelanggan/simpan',[PelangganController::class,'simpan_pelanggan']);
-route::get('/pelanggan/{id_pelanggan}/ubah',[PelangganController::class,'ubah']);
-Route::put('/pelanggan/ubah/{id_pelanggan}', [PelangganController::class,'simpan_ubah']);
-route::delete('/pelanggan/hapus/{id_pelanggan}',[PelangganController::class,'hapus_pelanggan']);
+Route::get('/pelanggan', [PelangganController::class, 'index']);
+Route::get('/pelanggan/tambah', [PelangganController::class, 'form_tambah_pelanggan']);
+Route::post('/pelanggan/simpan', [PelangganController::class, 'simpan_pelanggan']);
 
+Route::get('/pelanggan/{id_pelanggan}/ubah', [PelangganController::class, 'ubah']);
+Route::post('/pelanggan/{id_pelanggan}/ubah', [PelangganController::class, 'simpan_ubah']);
+
+Route::get('/pelanggan/{id_pelanggan}/hapus', [PelangganController::class, 'hapus_pelanggan']);
 
 //ini tansaksi ya
 Route::get('/transaksi', [TransaksiController::class, 'index']);

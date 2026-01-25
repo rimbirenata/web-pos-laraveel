@@ -1,6 +1,6 @@
 @extends('layout')
-@section('konten')
 
+@section('konten')
 <div class="card">
     <div class="card-header">
         <h4>Tambah Pelanggan</h4>
@@ -13,8 +13,11 @@
             <div class="mb-3">
                 <label>ID Pelanggan</label>
                 <input type="text" name="id_pelanggan"
-                    class="form-control"
+                    class="form-control @error('id_pelanggan') is-invalid @enderror"
                     value="{{ old('id_pelanggan') }}">
+                @error('id_pelanggan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
@@ -23,21 +26,27 @@
                     class="form-control @error('nama_pelanggan') is-invalid @enderror"
                     value="{{ old('nama_pelanggan') }}">
                 @error('nama_pelanggan')
-                <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="mb-3">
                 <label>No HP</label>
                 <input type="text" name="no_hp"
-                    class="form-control"
+                    class="form-control @error('no_hp') is-invalid @enderror"
                     value="{{ old('no_hp') }}">
+                @error('no_hp')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-3">
                 <label>Alamat</label>
                 <textarea name="alamat"
-                    class="form-control">{{ old('alamat') }}</textarea>
+                    class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat') }}</textarea>
+                @error('alamat')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <button class="btn btn-primary">Simpan</button>
@@ -45,5 +54,4 @@
         </form>
     </div>
 </div>
-
 @endsection

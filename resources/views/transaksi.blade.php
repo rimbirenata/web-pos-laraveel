@@ -87,12 +87,17 @@
             <input type="number" name="jumlah_bayar" id="bayar"
                 class="form-control" required>
 
+            {{-- NOTIF UANG KURANG --}}
+            <small id="notifKurang" class="text-danger d-none">
+                ❌ Uang tidak mencukupi
+            </small>
+
             <label class="mt-2">Kembalian</label>
             <input type="text" id="kembalian" class="form-control" readonly>
 
             <button type="submit"
                 class="btn btn-success mt-3 w-100"
-                onclick="this.disabled=true; this.form.submit();">
+                id="btnBayar">
                 💰 Bayar
             </button>
 
@@ -115,6 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const hpInput = document.getElementById('hp');
     const infoPelanggan = document.getElementById('infoPelanggan');
     const idPelanggan = document.getElementById('id_pelanggan');
+
+    const btnBayar = document.getElementById('btnBayar');
+    const notifKurang = document.getElementById('notifKurang');
 
     // Tambah dengan tombol
     document.querySelectorAll('.btn-tambah').forEach(btn => {
@@ -222,18 +230,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ===== KEMBALIAN OTOMATIS & NOTIF UANG KURANG =====
     function hitungKembalian() {
         const bayar = parseInt(bayarInput.value) || 0;
         const total = parseInt(totalInput.value) || 0;
-        kembalianInput.value = bayar >= total ? bayar - total : 0;
+
+        if (bayar < total) {
+            kembalianInput.value = '';
+            notifKurang.classList.remove('d-none');
+            btnBayar.disabled = true;
+        } else {
+            kembalianInput.value = bayar - total;
+            notifKurang.classList.add('d-none');
+            btnBayar.disabled = false;
+        }
     }
 
     bayarInput.addEventListener('input', hitungKembalian);
 
-    // 🟡 VALIDASI SEBELUM SUBMIT
+    // ===== VALIDASI SEBELUM SUBMIT =====
     document.getElementById('formTransaksi').addEventListener('submit', function(e) {
         const total = parseInt(totalInput.value) || 0;
         const bayar = parseInt(bayarInput.value) || 0;
+
+        if (keranjang.length === 0) {
+            e.preventDefault();
+            alert('Keranjang kosong!');
+            return;
+        }
+
         if (bayar < total) {
             e.preventDefault();
             alert('Uang Anda kurang! Isi jumlah bayar yang cukup.');

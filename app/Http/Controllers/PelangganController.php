@@ -3,94 +3,90 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pelanggan;
+use App\Models\Barang;
+use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
+use Illuminate\Support\Facades\DB;
 
-class PelangganController extends Controller
+class TransaksiController extends Controller
 {
-    // =====================
-    // TAMPIL DATA
-    // =====================
     public function index()
     {
-        $pelanggan = Pelanggan::all();
-        return view('pelanggan', compact('pelanggan'));
+        $barang = Barang::all();
+        return view('transaksi', compact('barang'));
     }
 
-    // =====================
-    // FORM TAMBAH
-    // =====================
-    public function form_tambah_pelanggan()
+    public function proses(Request $request)
     {
-        return view('pelanggan-tambah',compact('pelanggan'));
-    }
+        // 1️⃣ Validasi form
+        $request->validate([
+            'keranjang' => 'required|array',
+            'total_bayar' => 'required|numeric|min:1',
+            'jumlah_bayar' => 'required|numeric|min:1',
+        ]);
 
-    // =====================
-    // SIMPAN DATA BARU
-    // =====================
-    public function simpan_pelanggan(Request $request)
-    {
-        $request->validate(
-            [
-                'id_pelanggan'   => 'required|unique:pelanggan,id_pelanggan',
-                'nama_pelanggan' => [
-                    'required',
-                    'regex:/^[A-Za-z\s]+$/'
-                ],
-                'no_hp'          => 'required|numeric',
-                'alamat'         => 'required'
-            ],
-            [
-                'nama_pelanggan.regex' =>
-                'Nama pelanggan tidak boleh mengandung angka atau simbol (/, . , ! ?)'
-            ]
-        );
+        // 2️⃣ VALIDASI UANG KURANG
+        if ($request->jumlah_bayar < $request->total_bayar) {
+            return back()->with('error', '❌ Uang tidak mencukupi');
+        }
 
-        Pelanggan::create($request->all());
+        DB::beginTransaction();
 
-        return redirect('/pelanggan')->with('success','Data berhasil disimpan');
-    }
+        try {
+            // SIMPAN TRANSAKSI
+            $transaksi = Transaksi::create([
+                'id_pelanggan' => $request->id_pelanggan,
+                'tanggal_transaksi' => now(),
+                'total_bayar' => $request->total_bayar,
+                'jumlah_bayar' => $request->jumlah_bayar,
+                'kembalian' => $request->jumlah_bayar - $request->total_bayar,
+                'total_keuntungan' => 0
+            ]);
 
-    // =====================
-    // FORM UBAH
-    // =====================
-    public function ubah($id_pelanggan)
-    {
-        $pelanggan = Pelanggan::findOrFail($id_pelanggan);
-        return view('pelanggan.ubah', compact('pelanggan'));
-    }
+            $totalUntung = 0;
 
-    // =====================
-    // SIMPAN UBAH
-    // =====================
-    public function simpan_ubah(Request $request, $id_pelanggan)
-    {
-        $request->validate(
-            [
-                'nama_pelanggan' => [
-                    'required',
-                    'regex:/^[A-Za-z\s]+$/'
-                ],
-                'no_hp'  => 'required|numeric',
-                'alamat' => 'required'
-            ],
-            [
-                'nama_pelanggan.regex' =>
-                'Nama pelanggan tidak boleh mengandung angka atau simbol (/, . , ! ?)'
-            ]
-        );
+            foreach ($request->keranjang as $k) {
+                $barang = Barang::find($k['id']);
 
-        Pelanggan::where('id_pelanggan', $id_pelanggan)
-            ->update($request->only(['nama_pelanggan','no_hp','alamat']));
+                if (!$barang || $barang->stok < $k['jumlah']) {
+                    throw new \Exception('Stok tidak mencukupi');
+                }
 
-        return redirect('/pelanggan')->with('success','Data berhasil diubah');
-    }
+                $subtotal = $barang->harga_jual * $k['jumlah'];
+                $untung = ($barang->harga_jual - $barang->harga_beli) * $k['jumlah'];
 
-    // =====================
-    // HAPUS
-    // =====================
-    public function hapus_pelanggan($id_pelanggan)
-    {
-        Pelanggan::where('id_pelanggan', $id_pelanggan)->delete();
-        return redirect('/pelanggan')->with('success','Data berhasil dihapus');
+                DetailTransaksi::create([
+                    'id_transaksi' => $transaksi->id_transaksi,
+                    'id_barang' => $barang->id_barang,
+                    'jumlah' => $k['jumlah'],
+                    'jumlah_beli' => $k['jumlah'],
+                    'harga_saat_beli' => $barang->harga_jual,
+                    'subtotal' => $subtotal,
+                    'keuntungan_item' => $untung
+                ]);
+
+                $barang->stok -= $k['jumlah'];
+                $barang->save();
+
+                $totalUntung += $untung;
+            }
+
+            $transaksi->update([
+                'total_keuntungan' => $totalUntung
+            ]);
+
+            DB::commit();
+
+            return view('transaksi_struk', [
+                'detail' => $request->keranjang,
+                'total' => $request->total_bayar,
+                'bayar' => $request->jumlah_bayar,
+                'kembalian' => $request->jumlah_bayar - $request->total_bayar
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
     }
 }
