@@ -10,7 +10,6 @@
 <div class="container d-flex justify-content-center">
     <div class="col-12 col-sm-8 col-md-4 small">
 
-        
         <div class="text-center mb-2">
             <strong>TOKO KABASA</strong><br>
             Jl Hasyim Asy'ary Banjarejo Pagelaran Malang<br>
@@ -19,7 +18,6 @@
 
         <hr class="border border-dark border-1 border-dashed">
 
-        
         <table class="table table-borderless table-sm mb-1">
             <tr>
                 <td>Tanggal</td>
@@ -33,7 +31,6 @@
 
         <hr>
 
-   
         <table class="table table-borderless table-sm">
             @foreach($detail as $d)
             <tr>
@@ -44,6 +41,7 @@
                 <td class="text-end">{{ number_format($d['subtotal']) }}</td>
             </tr>
             @endforeach
+
         </table>
 
         <hr>
@@ -65,7 +63,6 @@
 
         <hr>
 
-       
         <div class="text-center mt-2">
             <strong>*** TERIMA KASIH ***</strong><br>
             Barang yang sudah dibeli<br>

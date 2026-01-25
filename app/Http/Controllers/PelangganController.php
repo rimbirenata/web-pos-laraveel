@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\DB;
 
-class TransaksiController extends Controller
+class PelangganController extends Controller
 {
     public function index()
     {
-        $barang = Barang::all();
-        return view('transaksi', compact('barang'));
+        $pelanggan = Pelanggan::all();
+        return view('pelanggan.index', compact('pelanggan'));
     }
 
     public function proses(Request $request)

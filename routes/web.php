@@ -88,10 +88,10 @@ Route::delete('/suplier/{id}', [SuplierController::class, 'hapus_suplier'])
 
 // ini kategori ya
 
-route::get('/kategori',[KategoriController::class,'index']);
-route::get('/kategori/tambah',[KategoriController::class,'form_tambah_kategori']);
-route::post('/kategori/simpan',[KategoriController::class,'simpan_kategori']);
-route::get('/kategori/{id_kategori}/ubah',[KategoriController::class,'ubah']);
+Route::get('/kategori',[KategoriController::class,'index']);
+Route::get('/kategori/tambah',[KategoriController::class,'form_tambah_kategori']);
+Route::post('/kategori/simpan',[KategoriController::class,'simpan_kategori']);
+Route::get('/kategori/{id_kategori}/ubah',[KategoriController::class,'ubah']);
 Route::put('/kategori/ubah/{id_kategori}', [KategoriController::class,'simpan_ubah']);
 route::delete('/kategori/hapus/{id_kategori}',[KategoriController::class,'hapus_kategori']);
 

@@ -13,105 +13,83 @@ class TransaksiController extends Controller
     public function index()
     {
         $barang = Barang::all();
-        return view('transaksi', compact('barang'));
+        $pelanggan = \App\Models\Pelanggan::all(); // Ambil semua pelanggan
+        return view('transaksi', compact('barang','pelanggan'));
     }
 
     public function proses(Request $request)
     {
-        // ===============================
-        // 1️⃣ VALIDASI AWAL
-        // ===============================
+        // Validasi awal
         if (!$request->keranjang || count($request->keranjang) == 0) {
-            return back()->with('error', '❌ Keranjang masih kosong');
+            return back()->with('error', 'Keranjang masih kosong');
         }
 
         if ($request->jumlah_bayar < $request->total_bayar) {
-            return back()
-                ->withInput()
-                ->with('error', '❌ Uang tidak mencukupi');
+            return back()->withInput()->with('error', 'Uang tidak mencukupi');
         }
 
         DB::beginTransaction();
 
         try {
-            // ===============================
-            // 2️⃣ SIMPAN TRANSAKSI
-            // ===============================
             $transaksi = Transaksi::create([
-                'id_pelanggan'        => $request->id_pelanggan,
-                'tanggal_transaksi'   => now(),
-                'total_bayar'         => $request->total_bayar,
-                'jumlah_bayar'        => $request->jumlah_bayar,
-                'kembalian'           => $request->jumlah_bayar - $request->total_bayar,
-                'total_keuntungan'    => 0
+                'id_pelanggan' => $request->id_pelanggan,
+                'tanggal_transaksi' => now(),
+                'total_bayar' => $request->total_bayar,
+                'jumlah_bayar' => $request->jumlah_bayar,
+                'kembalian' => $request->jumlah_bayar - $request->total_bayar,
+                'total_keuntungan' => 0
             ]);
 
-            $totalUntung = 0;
-            $detail = [];
+            $totalKeuntungan = 0;
 
-            // ===============================
-            // 3️⃣ LOOP KERANJANG
-            // ===============================
-            foreach ($request->keranjang as $k) {
-                $barang = Barang::find($k['id']);
-
+            foreach ($request->keranjang as $item) {
+                $barang = Barang::find($item['id']);
                 if (!$barang) {
                     throw new \Exception('Barang tidak ditemukan');
                 }
-
-                if ($barang->stok < $k['jumlah']) {
-                    throw new \Exception('❌ Stok '.$barang->nama_barang.' tidak mencukupi');
+                if ($barang->stok < $item['jumlah']) {
+                    throw new \Exception("Stok barang {$barang->nama_barang} tidak mencukupi");
                 }
 
-                $subtotal = $barang->harga_jual * $k['jumlah'];
-                $untung   = ($barang->harga_jual - $barang->harga_beli) * $k['jumlah'];
+                $subtotal = $barang->harga_jual * $item['jumlah'];
+                $untung = ($barang->harga_jual - $barang->harga_beli) * $item['jumlah'];
 
                 DetailTransaksi::create([
-                    'id_transaksi'    => $transaksi->id_transaksi,
-                    'id_barang'       => $barang->id_barang,
-                    'jumlah'          => $k['jumlah'],
-                    'jumlah_beli'     => $k['jumlah'],
+                    'id_transaksi' => $transaksi->id_transaksi,
+                    'id_barang' => $barang->id_barang,
+                    'jumlah' => $item['jumlah'],
+                    'jumlah_beli' => $item['jumlah'],
                     'harga_saat_beli' => $barang->harga_jual,
-                    'subtotal'        => $subtotal,
+                    'subtotal' => $subtotal,
                     'keuntungan_item' => $untung
                 ]);
 
                 // Kurangi stok
-                $barang->stok -= $k['jumlah'];
+                $barang->stok -= $item['jumlah'];
                 $barang->save();
 
-                $totalUntung += $untung;
-
-                $detail[] = [
-                    'nama'     => $barang->nama_barang,
-                    'jumlah'   => $k['jumlah'],
-                    'harga'    => $barang->harga_jual,
-                    'subtotal' => $subtotal
-                ];
+                $totalKeuntungan += $untung;
             }
 
-            // ===============================
-            // 4️⃣ UPDATE TOTAL KEUNTUNGAN
-            // ===============================
-            $transaksi->update([
-                'total_keuntungan' => $totalUntung
-            ]);
+            $transaksi->update(['total_keuntungan' => $totalKeuntungan]);
 
             DB::commit();
 
-            // ===============================
-            // 5️⃣ TAMPIL STRUK
-            // ===============================
+            // Ambil ulang data detail transaksi lengkap dari DB, relasi barang juga dimuat
+            $detail = DetailTransaksi::with('barang')
+                ->where('id_transaksi', $transaksi->id_transaksi)
+                ->get();
+
             return view('transaksi_struk', [
-                'detail'     => $detail,
-                'total'      => $request->total_bayar,
-                'bayar'      => $request->jumlah_bayar,
-                'kembalian'  => $request->jumlah_bayar - $request->total_bayar
+                'detail' => $detail,
+                'total' => $transaksi->total_bayar,
+                'bayar' => $transaksi->jumlah_bayar,
+                'kembalian' => $transaksi->kembalian,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', $e->getMessage());
+            return back()->with('error', $e->getMessage())->withInput();
         }
     }
 }
