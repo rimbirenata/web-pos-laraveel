@@ -23,16 +23,16 @@ class SuplierController extends Controller
         $request->validate([
             'nama_suplier' => [
                 'required',
-                'regex:/^[A-Za-z\s]+$/'
+                'regex:/^[^0-9.;!?\/]+$/'
             ],
             'no_hp'  => 'required',
             'alamat' => [
                 'required',
-                'regex:/^[A-Za-z\s]+$/'
+                'regex:/^[^0-9.;!?\/]+$/'
             ],
         ], [
-            'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka',
-            'alamat.regex'      => 'Alamat tidak boleh mengandung angka',
+            'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka, titik koma, tanda seru, tanda tanya atau slash',
+            'alamat.regex'      => 'Alamat tidak boleh mengandung angka, titik koma, tanda seru, tanda tanya atau slash',
         ]);
 
         Suplier::create($request->all());
@@ -48,33 +48,30 @@ class SuplierController extends Controller
     }
 
     public function simpan_ubah(Request $request, $id)
-    {
-        $request->validate([
-            'nama_suplier' => [
-                'required',
-                'regex:/^[A-Za-z\s]+$/'
-            ],
-            'no_hp'  => 'required',
-            'alamat' => [
-                'required',
-                'regex:/^[A-Za-z\s]+$/'
-            ],
-        ], [
-            'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka',
-            'alamat.regex'      => 'Alamat tidak boleh mengandung angka',
-        ]);
+{
+    $request->validate([
+        'nama_suplier' => [
+            'required',
+            'regex:/^[^0-9,\.!?\/]+$/'
+        ],
+        'no_hp' => [
+            'required',
+            'regex:/^[0-9]+$/'
+        ],
+        'alamat' => [
+            'required',
+            'regex:/^[^0-9,\.!?\/]+$/'
+        ],
+    ], [
+        'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka, koma, titik, tanda tanya, tanda seru, atau slash',
+        'no_hp.regex' => 'Nomor HP harus berupa angka saja, tanpa huruf atau simbol',
+        'alamat.regex' => 'Alamat tidak boleh mengandung angka, koma, titik, tanda tanya, tanda seru, atau slash',
+    ]);
 
-        Suplier::findOrFail($id)->update($request->all());
+    Suplier::findOrFail($id)->update($request->all());
 
-        return redirect()->route('suplier.index')
-            ->with('success', 'Suplier berhasil diubah');
-    }
+    return redirect()->route('suplier.index')
+        ->with('success', 'Suplier berhasil diubah');
+}
 
-    public function hapus_suplier($id)
-    {
-        Suplier::findOrFail($id)->delete();
-
-        return redirect()->route('suplier.index')
-            ->with('success', 'Suplier berhasil dihapus');
-    }
 }

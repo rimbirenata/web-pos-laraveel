@@ -31,11 +31,10 @@
                        class="form-control"
                        value="{{ old('nama_suplier') }}"
                        required>
-
                 <small id="peringatan-nama"
                        class="text-danger"
                        style="display:none;">
-                    Nama suplier tidak boleh mengandung angka
+                    Nama suplier tidak boleh mengandung angka, titik koma, tanda seru, tanda tanya atau slash
                 </small>
             </div>
 
@@ -57,11 +56,10 @@
                           class="form-control"
                           rows="3"
                           required>{{ old('alamat') }}</textarea>
-
                 <small id="peringatan-alamat"
                        class="text-danger"
                        style="display:none;">
-                    Alamat tidak boleh mengandung angka
+                    Alamat tidak boleh mengandung angka, titik koma, tanda seru, tanda tanya atau slash
                 </small>
             </div>
 
@@ -83,19 +81,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const peringatanAlamat = document.getElementById('peringatan-alamat');
     const tombol = document.getElementById('btn-simpan');
 
-    const regexAngka = /[0-9]/;
+    // regex karakter terlarang: angka, . ; ! ? /
+    const regexTerlarang = /[0-9.;!?\/]/;
 
     function validasi() {
         let valid = true;
 
-        if (regexAngka.test(namaSuplier.value)) {
+        if (regexTerlarang.test(namaSuplier.value)) {
             peringatanNama.style.display = 'block';
             valid = false;
         } else {
             peringatanNama.style.display = 'none';
         }
 
-        if (regexAngka.test(alamat.value)) {
+        if (regexTerlarang.test(alamat.value)) {
             peringatanAlamat.style.display = 'block';
             valid = false;
         } else {

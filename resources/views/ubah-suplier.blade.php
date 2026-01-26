@@ -3,7 +3,7 @@
 @section('konten')
 <div class="card shadow m-3">
     <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Tambah Suplier</h5>
+        <h5 class="mb-0">Ubah Suplier</h5>
     </div>
 
     <div class="card-body">
@@ -19,74 +19,114 @@
             </div>
         @endif
 
-        <form action="{{ route('suplier.simpan') }}" method="POST">
+        <form action="{{ route('suplier.update', $suplier->id_suplier) }}" method="POST" id="form-ubah-suplier">
             @csrf
+            @method('PUT')
 
-            {{-- NAMA SUPLIER --}}
+            <div class="mb-3">
+                <label class="form-label">ID Suplier</label>
+                <input type="text"
+                       class="form-control"
+                       value="{{ $suplier->id_suplier }}"
+                       readonly>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Nama Suplier</label>
                 <input type="text"
                        name="nama_suplier"
                        id="nama_suplier"
                        class="form-control"
-                       value="{{ old('nama_suplier') }}"
+                       value="{{ old('nama_suplier', $suplier->nama_suplier) }}"
                        required>
-
-                {{-- PESAN PERINGATAN --}}
-                <small id="peringatan-suplier"
-                       class="text-danger"
-                       style="display:none;">
-                    Nama suplier tidak boleh angka dan tanda titik koma seru tanya dan slash
+                <small id="error-nama" class="text-danger" style="display:none;">
+                    Nama suplier tidak boleh mengandung angka, koma, titik, tanda tanya, tanda seru, atau slash
                 </small>
             </div>
 
-            {{-- NO HP --}}
             <div class="mb-3">
                 <label class="form-label">No HP</label>
                 <input type="text"
                        name="no_hp"
+                       id="no_hp"
                        class="form-control"
-                       value="{{ old('no_hp') }}"
+                       value="{{ old('no_hp', $suplier->no_hp) }}"
                        required>
+                <small id="error-nohp" class="text-danger" style="display:none;">
+                    Nomor HP harus berupa angka saja, tanpa huruf atau simbol
+                </small>
             </div>
 
-            {{-- ALAMAT --}}
             <div class="mb-3">
                 <label class="form-label">Alamat</label>
                 <textarea name="alamat"
+                          id="alamat"
                           class="form-control"
                           rows="3"
-                          required>{{ old('alamat') }}</textarea>
+                          required>{{ old('alamat', $suplier->alamat) }}</textarea>
+                <small id="error-alamat" class="text-danger" style="display:none;">
+                    Alamat tidak boleh mengandung angka, koma, titik, tanda tanya, tanda seru, atau slash
+                </small>
             </div>
 
-            <button class="btn btn-success" id="btn-simpan">Simpan</button>
-            <a href="{{ route('suplier.index') }}" class="btn btn-secondary">
-                Kembali
-            </a>
+            <button type="submit" class="btn btn-primary" id="btn-submit">Simpan</button>
+            <a href="{{ route('suplier.index') }}" class="btn btn-secondary">Kembali</a>
         </form>
-
     </div>
 </div>
 
-{{-- JAVASCRIPT VALIDASI (TAMBAHAN) --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const namaSuplier = document.getElementById('nama_suplier');
-    const peringatan  = document.getElementById('peringatan-suplier');
-    const tombol     = document.getElementById('btn-simpan');
+    const noHp = document.getElementById('no_hp');
+    const alamat = document.getElementById('alamat');
+    const btnSubmit = document.getElementById('btn-submit');
 
-    // karakter terlarang: angka . , ! ? /
-    const regexTerlarang = /[0-9\.\,\!\?\/]/;
+    const errorNama = document.getElementById('error-nama');
+    const errorNoHp = document.getElementById('error-nohp');
+    const errorAlamat = document.getElementById('error-alamat');
 
-    namaSuplier.addEventListener('input', function () {
-        if (regexTerlarang.test(this.value)) {
-            peringatan.style.display = 'block';
-            tombol.disabled = true;
+    // Regex larangan: angka, koma, titik, tanda tanya, tanda seru, slash
+    const regexTerlarang = /[0-9,\.!?\/]/;
+    // Regex validasi no hp: angka saja
+    const regexNoHp = /^[0-9]+$/;
+
+    function validasi() {
+        let valid = true;
+
+        // Validasi nama suplier
+        if (regexTerlarang.test(namaSuplier.value)) {
+            errorNama.style.display = 'block';
+            valid = false;
         } else {
-            peringatan.style.display = 'none';
-            tombol.disabled = false;
+            errorNama.style.display = 'none';
         }
-    });
+
+        // Validasi no hp
+        if (!regexNoHp.test(noHp.value)) {
+            errorNoHp.style.display = 'block';
+            valid = false;
+        } else {
+            errorNoHp.style.display = 'none';
+        }
+
+        // Validasi alamat
+        if (regexTerlarang.test(alamat.value)) {
+            errorAlamat.style.display = 'block';
+            valid = false;
+        } else {
+            errorAlamat.style.display = 'none';
+        }
+
+        btnSubmit.disabled = !valid;
+    }
+
+    namaSuplier.addEventListener('input', validasi);
+    noHp.addEventListener('input', validasi);
+    alamat.addEventListener('input', validasi);
+
+    // Jalankan validasi awal saat load
+    validasi();
 });
 </script>
 @endsection
