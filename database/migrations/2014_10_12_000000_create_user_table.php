@@ -10,10 +10,10 @@ return new class extends Migration {
         if (!Schema::hasTable('user')) {
         Schema::create('user', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 50);
+            $table->string('nama', 100);
             $table->string('username', 50);
-            $table->string('password');
-            $table->string('no_hp', 50);
+            $table->string('password', 255);
+            $table->string('no_hp', 20);
         });
     }
     }

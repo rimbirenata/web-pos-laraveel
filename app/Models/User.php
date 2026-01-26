@@ -16,5 +16,6 @@ class User extends Model
         'password',
         'no_hp'
     ];
+
     protected $hidden = ['password'];
 }
