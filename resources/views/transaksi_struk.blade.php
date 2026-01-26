@@ -43,7 +43,7 @@
             @endforeach
 
         </table>
-
+hp artisan serve
         <hr>
 
         <table class="table table-borderless table-sm">
