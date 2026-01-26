@@ -26,12 +26,17 @@ class BarangController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'nama_barang' => 'required',
+            'nama_barang' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
             'id_kategori' => 'required',
             'id_suplier'  => 'required',
             'stok'        => 'required|numeric',
             'harga_beli'  => 'required|numeric',
             'harga_jual'  => 'required|numeric',
+        ], [
+            'nama_barang.regex' => 'Nama barang tidak boleh mengandung angka'
         ]);
 
         Barang::create($request->all());
@@ -50,12 +55,17 @@ class BarangController extends Controller
     public function update(Request $request, $id_barang)
     {
         $request->validate([
-            'nama_barang' => 'required',
+            'nama_barang' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
             'id_kategori' => 'required',
             'id_suplier'  => 'required',
             'stok'        => 'required|numeric',
             'harga_beli'  => 'required|numeric',
             'harga_jual'  => 'required|numeric',
+        ], [
+            'nama_barang.regex' => 'Nama barang tidak boleh mengandung angka'
         ]);
 
         Barang::findOrFail($id_barang)->update($request->all());

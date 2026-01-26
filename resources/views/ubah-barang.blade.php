@@ -8,7 +8,7 @@
 
     <div class="card-body">
 
-        {{-- ERROR VALIDASI --}}
+        {{-- ERROR VALIDASI BACKEND --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -28,9 +28,17 @@
                 <label>Nama Barang</label>
                 <input type="text"
                        name="nama_barang"
+                       id="nama_barang"
                        class="form-control"
                        value="{{ $barang->nama_barang }}"
                        required>
+
+                {{-- PERINGATAN --}}
+                <small id="peringatan-nama"
+                       class="text-danger"
+                       style="display:none;">
+                    Nama barang tidak boleh mengandung angka!
+                </small>
             </div>
 
             {{-- KATEGORI --}}
@@ -91,7 +99,7 @@
                        required>
             </div>
 
-            <button class="btn btn-warning">Update</button>
+            <button class="btn btn-warning" id="btn-submit">Update</button>
             <a href="{{ route('barang-index') }}" class="btn btn-secondary">
                 Kembali
             </a>
@@ -99,4 +107,23 @@
 
     </div>
 </div>
+
+{{-- JAVASCRIPT VALIDASI --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const namaBarang = document.getElementById('nama_barang');
+    const peringatan = document.getElementById('peringatan-nama');
+    const tombol = document.getElementById('btn-submit');
+
+    namaBarang.addEventListener('input', function () {
+        if (/[0-9]/.test(this.value)) {
+            peringatan.style.display = 'block';
+            tombol.disabled = true;
+        } else {
+            peringatan.style.display = 'none';
+            tombol.disabled = false;
+        }
+    });
+});
+</script>
 @endsection

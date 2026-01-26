@@ -9,7 +9,6 @@
 
 <div class="container d-flex justify-content-center">
     <div class="col-12 col-sm-8 col-md-4 small">
-
         <div class="text-center mb-2">
             <strong>TOKO KABASA</strong><br>
             Jl Hasyim Asy'ary Banjarejo Pagelaran Malang<br>
