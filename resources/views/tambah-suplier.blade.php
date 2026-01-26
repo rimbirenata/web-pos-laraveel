@@ -22,15 +22,24 @@
         <form action="{{ route('suplier.simpan') }}" method="POST">
             @csrf
 
+            {{-- Nama Suplier --}}
             <div class="mb-3">
                 <label class="form-label">Nama Suplier</label>
                 <input type="text"
                        name="nama_suplier"
+                       id="nama_suplier"
                        class="form-control"
                        value="{{ old('nama_suplier') }}"
                        required>
+
+                <small id="peringatan-nama"
+                       class="text-danger"
+                       style="display:none;">
+                    Nama suplier tidak boleh mengandung angka
+                </small>
             </div>
 
+            {{-- No HP --}}
             <div class="mb-3">
                 <label class="form-label">No HP</label>
                 <input type="text"
@@ -40,15 +49,23 @@
                        required>
             </div>
 
+            {{-- Alamat --}}
             <div class="mb-3">
                 <label class="form-label">Alamat</label>
                 <textarea name="alamat"
+                          id="alamat"
                           class="form-control"
                           rows="3"
                           required>{{ old('alamat') }}</textarea>
+
+                <small id="peringatan-alamat"
+                       class="text-danger"
+                       style="display:none;">
+                    Alamat tidak boleh mengandung angka
+                </small>
             </div>
 
-            <button class="btn btn-success">Simpan</button>
+            <button class="btn btn-success" id="btn-simpan">Simpan</button>
             <a href="{{ route('suplier.index') }}" class="btn btn-secondary">
                 Kembali
             </a>
@@ -56,4 +73,40 @@
 
     </div>
 </div>
+
+{{-- JAVASCRIPT VALIDASI --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const namaSuplier = document.getElementById('nama_suplier');
+    const alamat      = document.getElementById('alamat');
+    const peringatanNama   = document.getElementById('peringatan-nama');
+    const peringatanAlamat = document.getElementById('peringatan-alamat');
+    const tombol = document.getElementById('btn-simpan');
+
+    const regexAngka = /[0-9]/;
+
+    function validasi() {
+        let valid = true;
+
+        if (regexAngka.test(namaSuplier.value)) {
+            peringatanNama.style.display = 'block';
+            valid = false;
+        } else {
+            peringatanNama.style.display = 'none';
+        }
+
+        if (regexAngka.test(alamat.value)) {
+            peringatanAlamat.style.display = 'block';
+            valid = false;
+        } else {
+            peringatanAlamat.style.display = 'none';
+        }
+
+        tombol.disabled = !valid;
+    }
+
+    namaSuplier.addEventListener('input', validasi);
+    alamat.addEventListener('input', validasi);
+});
+</script>
 @endsection

@@ -36,7 +36,8 @@ class BarangController extends Controller
             'harga_beli'  => 'required|numeric',
             'harga_jual'  => 'required|numeric',
         ], [
-            'nama_barang.regex' => 'Nama barang tidak boleh mengandung angka'
+            'nama_barang.regex' =>
+                'Tidak boleh angka dan tanda titik koma seru tanya dan slash'
         ]);
 
         Barang::create($request->all());
@@ -65,7 +66,8 @@ class BarangController extends Controller
             'harga_beli'  => 'required|numeric',
             'harga_jual'  => 'required|numeric',
         ], [
-            'nama_barang.regex' => 'Nama barang tidak boleh mengandung angka'
+            'nama_barang.regex' =>
+                'Tidak boleh angka dan tanda titik koma seru tanya dan slash'
         ]);
 
         Barang::findOrFail($id_barang)->update($request->all());

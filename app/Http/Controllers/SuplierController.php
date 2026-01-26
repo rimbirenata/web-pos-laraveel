@@ -6,8 +6,6 @@ use App\Models\Suplier;
 use Illuminate\Http\Request;
 
 class SuplierController extends Controller
-
-    
 {
     public function index()
     {
@@ -23,9 +21,18 @@ class SuplierController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'nama_suplier' => 'required',
-            'no_hp'        => 'required',
-            'alamat'       => 'required',
+            'nama_suplier' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
+            'no_hp'  => 'required',
+            'alamat' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
+        ], [
+            'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka',
+            'alamat.regex'      => 'Alamat tidak boleh mengandung angka',
         ]);
 
         Suplier::create($request->all());
@@ -43,9 +50,18 @@ class SuplierController extends Controller
     public function simpan_ubah(Request $request, $id)
     {
         $request->validate([
-            'nama_suplier' => 'required',
-            'no_hp'        => 'required',
-            'alamat'       => 'required',
+            'nama_suplier' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
+            'no_hp'  => 'required',
+            'alamat' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
+        ], [
+            'nama_suplier.regex' => 'Nama suplier tidak boleh mengandung angka',
+            'alamat.regex'      => 'Alamat tidak boleh mengandung angka',
         ]);
 
         Suplier::findOrFail($id)->update($request->all());

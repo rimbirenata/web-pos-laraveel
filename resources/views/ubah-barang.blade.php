@@ -8,7 +8,7 @@
 
     <div class="card-body">
 
-        {{-- ERROR VALIDASI BACKEND --}}
+        {{-- ERROR VALIDASI BACKEND (KODE ASLI) --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -23,7 +23,7 @@
             @csrf
             @method('PUT')
 
-            {{-- NAMA BARANG --}}
+            {{-- NAMA BARANG (KODE ASLI + TAMBAHAN) --}}
             <div class="mb-3">
                 <label>Nama Barang</label>
                 <input type="text"
@@ -33,11 +33,11 @@
                        value="{{ $barang->nama_barang }}"
                        required>
 
-                {{-- PERINGATAN --}}
+                {{-- PESAN PERINGATAN --}}
                 <small id="peringatan-nama"
                        class="text-danger"
                        style="display:none;">
-                    Nama barang tidak boleh mengandung angka!
+                    Tidak boleh angka dan tanda titik koma seru tanya dan slash
                 </small>
             </div>
 
@@ -108,15 +108,18 @@
     </div>
 </div>
 
-{{-- JAVASCRIPT VALIDASI --}}
+{{-- JAVASCRIPT VALIDASI (TAMBAHAN) --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const namaBarang = document.getElementById('nama_barang');
     const peringatan = document.getElementById('peringatan-nama');
     const tombol = document.getElementById('btn-submit');
 
+    // karakter terlarang: angka . , ! ? /
+    const regexTerlarang = /[0-9\.\,\!\?\/]/;
+
     namaBarang.addEventListener('input', function () {
-        if (/[0-9]/.test(this.value)) {
+        if (regexTerlarang.test(this.value)) {
             peringatan.style.display = 'block';
             tombol.disabled = true;
         } else {
