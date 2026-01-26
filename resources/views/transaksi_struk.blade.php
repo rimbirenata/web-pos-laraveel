@@ -22,10 +22,15 @@
                 <td>Tanggal</td>
                 <td class="text-end">{{ date('d/m/Y H:i') }}</td>
             </tr>
+            
             <tr>
                 <td>Kasir</td>
-                <td class="text-end">{{ session('nama') ?? session('username') }}</td>
+                <td class="text-end">
+                    {{ session('nama') }}
+                </td>
             </tr>
+
+
         </table>
 
         <hr>

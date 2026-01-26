@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -22,15 +23,19 @@ class LoginController extends Controller
 
         $user = User::where('username', $request->username)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->with('error', 'Username atau Password salah');
+        if (!$user) {
+            return back()->with('error', 'Username tidak ditemukan');
         }
+        
 
-        // ✅ SESSION LOGIN
-        session()->put('login', true);
-        session()->put('id_user', $user->id_user);
-        session()->put('username', $user->username);
-        session()->put('nama', $user->nama); // ⭐ INI YANG DIPAKAI STRUK
+      
+        // SIMPAN SESSION
+        session([
+            'login'   => true,
+            'id'      => $user->id,
+            'nama'    => $user->nama,
+            'username'=> $user->username
+        ]);
 
         return redirect('/dashboard');
     }

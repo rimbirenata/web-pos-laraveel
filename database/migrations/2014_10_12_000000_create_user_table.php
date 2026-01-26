@@ -13,7 +13,6 @@ return new class extends Migration {
             $table->string('nama', 100);
             $table->string('username', 50);
             $table->string('password', 255);
-            $table->string('no_hp', 20);
         });
     }
     }
