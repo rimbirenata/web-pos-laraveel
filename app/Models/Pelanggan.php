@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Pelanggan extends Model
 {
     protected $table = 'pelanggan';
+
+    // PENTING supaya findOrFail TIDAK 404
     protected $primaryKey = 'id_pelanggan';
     public $incrementing = false;
-    public $timestamps = false;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'id_pelanggan',
@@ -17,4 +19,6 @@ class Pelanggan extends Model
         'no_hp',
         'alamat'
     ];
+
+    public $timestamps = false;
 }

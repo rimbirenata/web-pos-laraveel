@@ -1,155 +1,168 @@
 @extends('layout')
 
 @section('konten')
-<div class="container-fluid">
 
-    {{-- INFO CARD --}}
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white mb-3">
-                <div class="card-body">Total Barang<br><h4>{{ $totalBarang }}</h4></div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-white mb-3">
-                <div class="card-body">Kategori<br><h4>{{ $totalKategori }}</h4></div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white mb-3">
-                <div class="card-body">Pelanggan<br><h4>{{ $totalPelanggan }}</h4></div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-danger text-white mb-3">
-                <div class="card-body">Transaksi<br><h4>{{ $totalTransaksi }}</h4></div>
-            </div>
-        </div>
-    </div>
-
-    {{-- GRAFIK --}}
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card shadow mb-4">
-                <div class="card-header">Area Chart</div>
-                <div class="card-body">
-                    <canvas id="areaChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card shadow mb-4">
-                <div class="card-header">Bar Chart</div>
-                <div class="card-body">
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- PRODUK TERLARIS --}}
-    <div class="card shadow mb-4">
-        <div class="card-header btn btn-primary">Produk Terlaris</div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Nama Barang</th>
-                    <th>Total Terjual</th>
-                </tr>
-                <tbody>
-                @forelse($transaksiTerakhir as $t)
-                <tr>
-                <td>
-                {{ \Carbon\Carbon::parse($t->tanggal_transaksi)->format('d-m-Y') }}
-                </td>
-                <td>{{ $t->nama_pelanggan }}</td>
-                <td class="fw-bold text-success">
-                Rp {{ number_format($t->total_bayar,0,',','.') }}
-                </td>
-                </tr>
-                @empty
-<tr>
-    <td colspan="3" class="text-center text-muted py-3">
-        Belum ada transaksi
-    </td>
-</tr>
-@endforelse
-</tbody>
-
-
-            </table>
-        </div>
-    </div>
-
-    {{-- TRANSAKSI TERAKHIR --}}
-    <div class="card shadow mb-4">
-        <div class="card-header btn btn-primary">Transaksi Terakhir</div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Pelanggan</th>
-                    <th>Total</th>
-                </tr>
-                @forelse($transaksiTerakhir as $t)
-                <tr>
-                    <td>{{ $t->tanggal_transaksi }}</td>
-                    <td>{{ $t->nama_pelanggan }}</td>
-                    <td>{{ number_format($t->total_bayar) }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="3" class="text-center">Belum ada transaksi</td></tr>
-                @endforelse
-            </table>
-        </div>
-    </div>
-
+{{-- HEADER --}}
+<div class="mb-4">
+    <h4 class="fw-bold mb-1">Dashboard</h4>
+    <small class="text-muted">Ringkasan penjualan & performa toko</small>
 </div>
 
-{{-- CHART JS --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{-- STAT CARD --}}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary-subtle border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted">Total Barang</small>
+                    <h2 class="fw-bold mb-0">{{ $totalBarang }}</h2>
+                </div>
+                <div class="icon-circle bg-primary text-white">
+                    <i class="fa-solid fa-box"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning-subtle border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted">Kategori</small>
+                    <h2 class="fw-bold mb-0">{{ $totalKategori }}</h2>
+                </div>
+                <div class="icon-circle bg-warning text-white">
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card bg-success-subtle border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted">Pelanggan</small>
+                    <h2 class="fw-bold mb-0">{{ $totalPelanggan }}</h2>
+                </div>
+                <div class="icon-circle bg-success text-white">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card bg-danger-subtle border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-muted">Transaksi</small>
+                    <h2 class="fw-bold mb-0">{{ $totalTransaksi }}</h2>
+                </div>
+                <div class="icon-circle bg-danger text-white">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- GRAFIK --}}
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-transparent fw-semibold">
+                📈 Tren Penjualan Tahunan
+            </div>
+            <div class="card-body">
+                <canvas id="areaChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-transparent fw-semibold">
+                📊 Perbandingan Bulanan
+            </div>
+            <div class="card-body">
+                <canvas id="barChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- INSIGHT --}}
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">💡 Insight Penjualan</h6>
+                <p class="text-muted mb-0">
+                    Penjualan tertinggi terjadi pada awal tahun.
+                    Setelah bulan Januari, transaksi cenderung stabil dengan volume rendah.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body">
+                <h6 class="fw-bold mb-2">🚀 Rekomendasi</h6>
+                <p class="mb-0">
+                    Tingkatkan promo pada bulan sepi untuk menjaga konsistensi penjualan.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- CHART --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const labels = @json($bulan);
 const dataPenjualan = @json($totalPenjualan);
 
 // AREA CHART
-new Chart(document.getElementById('areaChart'), {
+new Chart(areaChart, {
     type: 'line',
     data: {
-        labels: labels,
+        labels,
         datasets: [{
-            label: 'Penjualan',
             data: dataPenjualan,
+            borderColor: '#0d6efd',
+            backgroundColor: 'rgba(13,110,253,.15)',
             fill: true,
-            tension: 0.4,
-            borderWidth: 2
+            tension: .45,
+            pointRadius: 4
         }]
     },
     options: {
+        plugins: { legend: { display: false }},
         scales: {
+            x: { grid: { display: false }},
             y: { beginAtZero: true }
         }
     }
 });
 
 // BAR CHART
-new Chart(document.getElementById('barChart'), {
+new Chart(barChart, {
     type: 'bar',
     data: {
-        labels: labels,
+        labels,
         datasets: [{
-            label: 'Penjualan',
-            data: dataPenjualan
+            data: dataPenjualan,
+            backgroundColor: '#0d6efd',
+            borderRadius: 6
         }]
     },
     options: {
-        scales: {
-            y: { beginAtZero: true }
-        }
+        plugins: { legend: { display: false }},
+        scales: { y: { beginAtZero: true }}
     }
 });
 </script>
+
 @endsection
