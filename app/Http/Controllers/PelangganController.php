@@ -73,42 +73,50 @@ class PelangganController extends Controller
     // =====================
     // SIMPAN PERUBAHAN
     // =====================
-    public function simpan_ubah(Request $request, $id_pelanggan)
-    {
-        $request->validate(
-            [
-                'nama_pelanggan' => 'required|string',
-                'no_hp'          => 'required|regex:/^[0-9]{10,13}$/',
-                'alamat'         => 'required'
+   public function simpan_ubah(Request $request, $id)
+{
+    $request->validate(
+        [
+            'nama_pelanggan' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
             ],
-            [
-                'nama_pelanggan.required' => 'Nama Pelanggan wajib diisi',
-                'no_hp.required'          => 'Nomor HP wajib diisi',
-                'no_hp.regex'             => 'Nomor HP harus berupa angka 10–13 digit',
-                'alamat.required'         => 'Alamat wajib diisi'
-            ]
-        );
+            'no_hp' => [
+                'required',
+                'regex:/^[0-9]+$/'
+            ],
+            'alamat' => [
+                'required',
+                'regex:/^[A-Za-z\s]+$/'
+            ],
+        ],
+        [
+            'nama_pelanggan.required' =>
+                'Nama pelanggan wajib diisi',
+            'nama_pelanggan.regex' =>
+                'Nama pelanggan tidak boleh mengandung angka atau tanda ? ! . , ;',
 
-        $pelanggan = Pelanggan::findOrFail($id_pelanggan);
+            'no_hp.required' =>
+                'No HP wajib diisi',
+            'no_hp.regex' =>
+                'No HP harus berupa angka',
 
-        $pelanggan->update([
-            'nama_pelanggan' => $request->nama_pelanggan,
-            'no_hp'          => $request->no_hp,
-            'alamat'         => $request->alamat,
-        ]);
+            'alamat.required' =>
+                'Alamat wajib diisi',
+            'alamat.regex' =>
+                'Alamat tidak boleh mengandung angka atau tanda ? ! . , ;',
+        ]
+    );
 
-        return redirect('/pelanggan')
-            ->with('success', 'Data pelanggan berhasil diubah');
-    }
+    $pelanggan = Pelanggan::findOrFail($id);
+    $pelanggan->update([
+        'nama_pelanggan' => $request->nama_pelanggan,
+        'no_hp' => $request->no_hp,
+        'alamat' => $request->alamat,
+    ]);
 
-    // =====================
-    // HAPUS
-    // =====================
-    public function hapus_pelanggan($id_pelanggan)
-    {
-        Pelanggan::findOrFail($id_pelanggan)->delete();
+    return redirect('/pelanggan')
+        ->with('success', 'Data pelanggan berhasil diubah');
+}
 
-        return redirect('/pelanggan')
-            ->with('success', 'Data pelanggan berhasil dihapus');
-    }
 }
