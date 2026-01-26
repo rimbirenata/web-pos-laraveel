@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Struk Transaksi</title>
+    <title></title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 </head>
 
@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td>Kasir</td>
-                <td class="text-end">{{ auth()->user()->name ?? 'Admin' }}</td>
+                <td class="text-end">{{ session('nama') ?? session('username') }}</td>
             </tr>
         </table>
 

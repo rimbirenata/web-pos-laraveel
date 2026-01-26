@@ -26,8 +26,11 @@ class LoginController extends Controller
             return back()->with('error', 'Username atau Password salah');
         }
 
+        // ✅ SESSION LOGIN
         session()->put('login', true);
+        session()->put('id_user', $user->id_user);
         session()->put('username', $user->username);
+        session()->put('nama', $user->nama); // ⭐ INI YANG DIPAKAI STRUK
 
         return redirect('/dashboard');
     }

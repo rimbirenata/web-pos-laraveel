@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
+        if (!Schema::hasTable('user')) {
         Schema::create('user', function (Blueprint $table) {
-            $table->id('id_user');
+            $table->id();
             $table->string('nama', 50);
-            $table->string('username', 50)->unique();
-            $table->string('password', 255);
-            $table->string('no_hp', 50)->nullable();
+            $table->string('username', 50);
+            $table->string('password');
+            $table->string('no_hp', 50);
         });
+    }
     }
 
     public function down()
