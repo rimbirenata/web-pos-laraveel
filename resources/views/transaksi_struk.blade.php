@@ -1,51 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <title></title>
+    <meta charset="UTF-8">
+    <title>Struk Transaksi</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 </head>
 
-<body onload="window.print()" class="bg-info">
+<body onload="window.print()">
 
 <div class="container d-flex justify-content-center">
     <div class="col-12 col-sm-8 col-md-4 small">
+
         <div class="text-center mb-2">
             <strong>TOKO KABASA LOVERS</strong><br>
-            Jl jalanin aja dulu siapa tau nyaman <br>
+            Jl jalanin aja dulu siapa tau nyaman<br>
             Telp: 08123456789
         </div>
 
-        <hr class="border border-dark border-1 border-dashed">
+        <hr>
 
-        <table class="table table-borderless table-sm mb-1">
+        <table class="table table-borderless table-sm">
             <tr>
                 <td>Tanggal</td>
-                <td class="text-end">{{ date('d/m/Y H:i') }}</td>
+                <td class="text-end">{{ now()->format('d/m/Y H:i') }}</td>
             </tr>
-            
             <tr>
                 <td>Kasir</td>
-                <td class="text-end">
-                    {{ session('nama') }}
-                </td>
+                <td class="text-end">{{ $kasir }}</td>
             </tr>
-
-
         </table>
 
         <hr>
 
         <table class="table table-borderless table-sm">
-            @foreach($detail as $d)
-            <tr>
-                <td colspan="2">{{ $d['nama'] }}</td>
-            </tr>
-            <tr>
-                <td>{{ $d['jumlah'] }} x {{ number_format($d['harga']) }}</td>
-                <td class="text-end">{{ number_format($d['subtotal']) }}</td>
-            </tr>
+            @foreach ($detail as $d)
+                <tr>
+                    <td colspan="2">{{ optional($d->barang)->nama_barang ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>{{ $d->jumlah }} x {{ number_format($d->harga_saat_beli) }}</td>
+                    <td class="text-end">{{ number_format($d->subtotal) }}</td>
+                </tr>
             @endforeach
-
         </table>
 
         <hr>
@@ -69,8 +65,7 @@
 
         <div class="text-center mt-2">
             <strong>*** TERIMA KASIH ***</strong><br>
-            Barang yang sudah dibeli<br>
-            tidak dapat dikembalikan
+            Barang yang sudah dibeli tidak dapat dikembalikan
         </div>
 
     </div>
