@@ -10,17 +10,14 @@ class Transaksi extends Model
     protected $primaryKey = 'id_transaksi';
     public $timestamps = false;
 
-    // ❌ HAPUS SEMUA INI
-    // public $incrementing = false;
-    // protected $keyType = 'string';
-
     protected $fillable = [
         'id_pelanggan',
         'tanggal_transaksi',
         'total_bayar',
         'jumlah_bayar',
+        'kembalian',
         'total_keuntungan',
-        'kembalian'
+        'kasir'
     ];
 
     public function detailTransaksi()

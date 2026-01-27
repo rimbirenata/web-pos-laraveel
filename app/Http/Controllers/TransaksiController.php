@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
+    /**
+     * HALAMAN TRANSAKSI
+     */
     public function index()
     {
         $barang = Barang::all();
@@ -20,6 +23,9 @@ class TransaksiController extends Controller
         return view('transaksi', compact('barang', 'pelanggan'));
     }
 
+    /**
+     * PROSES TRANSAKSI + STRUK
+     */
     public function proses(Request $request)
     {
         DB::beginTransaction();
@@ -32,6 +38,7 @@ class TransaksiController extends Controller
                 'jumlah_bayar' => $request->jumlah_bayar,
                 'kembalian' => $request->jumlah_bayar - $request->total_bayar,
                 'total_keuntungan' => 0,
+                'kasir' => Auth::user()->nama
             ]);
 
             foreach ($request->keranjang as $item) {
@@ -42,7 +49,7 @@ class TransaksiController extends Controller
                     'id_barang' => $barang->id_barang,
                     'jumlah' => $item['jumlah'],
                     'harga_saat_beli' => $barang->harga_jual,
-                    'subtotal' => $barang->harga_jual * $item['jumlah']
+                    'subtotal' => $barang->harga_jual * $item['jumlah'],
                 ]);
 
                 $barang->stok -= $item['jumlah'];
@@ -60,15 +67,12 @@ class TransaksiController extends Controller
                 'total' => $transaksi->total_bayar,
                 'bayar' => $transaksi->jumlah_bayar,
                 'kembalian' => $transaksi->kembalian,
-                'kasir' => Auth::check() ? Auth::user()->name : '-'
+                'kasir' => $transaksi->kasir
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'error' => true,
-                'message' => $e->getMessage()
-            ]);
+            return back()->with('error', $e->getMessage());
         }
     }
 }

@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -21,28 +19,24 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::where('username', $request->username)->first();
-
-        if (!$user) {
-            return back()->with('error', 'Username tidak ditemukan');
+        // LOGIN PAKAI AUTH LARAVEL
+        if (Auth::attempt([
+            'username' => $request->username,
+            'password' => $request->password
+        ])) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
-        
 
-      
-        // SIMPAN SESSION
-        session([
-            'login'   => true,
-            'id'      => $user->id,
-            'nama'    => $user->nama,
-            'username'=> $user->username
-        ]);
-
-        return redirect('/dashboard');
+        return back()->with('error', 'Username atau password salah');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->flush();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/login');
     }
 }

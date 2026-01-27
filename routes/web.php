@@ -29,15 +29,14 @@ use App\Http\Controllers\LaporanPenjualanController;
 */
 
 
-Route::get('/login', [LoginController::class, 'index']);
+Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'proses_login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', function () {
-    if (!session('login')) {
-        return redirect('/login');
-    }
-    return view('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
 
 
@@ -99,15 +98,15 @@ Route::post('/pelanggan/{id_pelanggan}/ubah', [PelangganController::class, 'simp
 Route::get('/pelanggan/{id_pelanggan}/hapus', [PelangganController::class, 'hapus_pelanggan']);
 
 //ini tansaksi ya
-Route::get('/transaksi', [TransaksiController::class, 'index']);
-Route::get('/transaksi/tambah', [TransaksiController::class, 'tambah']);
-Route::post('/transaksi/simpan', [TransaksiController::class, 'simpan']);
-Route::get('/transaksi/{id_transaksi}/ubah', [TransaksiController::class, 'ubah']);
-Route::put('/transaksi/{id_transaksi}/proses', [TransaksiController::class, 'update']);
-Route::delete('/transaksi/hapus/{id_transaksi}', [TransaksiController::class, 'hapus']);
-Route::post('/transaksi/proses', [TransaksiController::class, 'proses']);
-Route::get('/pelanggan/cari/{hp}', [PelangganController::class, 'cari']);
+Route::get('/transaksi', [TransaksiController::class, 'index'])->middleware('auth');
+Route::get('/transaksi/tambah', [TransaksiController::class, 'tambah'])->middleware('auth');
+Route::post('/transaksi/simpan', [TransaksiController::class, 'simpan'])->middleware('auth');
 
+Route::get('/transaksi/{id_transaksi}/ubah', [TransaksiController::class, 'ubah'])->middleware('auth');
+Route::put('/transaksi/{id_transaksi}/proses', [TransaksiController::class, 'update'])->middleware('auth');
+Route::delete('/transaksi/hapus/{id_transaksi}', [TransaksiController::class, 'hapus'])->middleware('auth');
+Route::post('/transaksi/proses', [TransaksiController::class, 'proses'])->middleware('auth');
+Route::get('/pelanggan/cari/{hp}', [PelangganController::class, 'cari'])->middleware('auth');
 
 
 //laporan
