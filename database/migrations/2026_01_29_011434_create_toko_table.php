@@ -7,18 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        if (!Schema::hasTable('user')) {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('toko', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 100);
-            $table->string('username', 50);
-            $table->string('password', 255);
+            $table->string('nama_toko');
+            $table->text('alamat');
+            $table->string('telp');
+            $table->timestamps();
         });
-    }
     }
 
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('toko');
     }
 };

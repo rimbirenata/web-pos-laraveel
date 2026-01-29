@@ -14,7 +14,6 @@ class Pelanggan extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_pelanggan',
         'nama_pelanggan',
         'no_hp',
         'alamat'

@@ -8,26 +8,15 @@ use Carbon\Carbon;
 
 class HalamanController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
-        // =============================
-        // CEK LOGIN
-        // =============================
-        if (!session()->has('login')) {
-            return redirect('/login');
-        }
-
-        // =============================
         // INFO CARD
-        // =============================
         $totalBarang = Schema::hasTable('barang') ? DB::table('barang')->count() : 0;
         $totalKategori = Schema::hasTable('kategori') ? DB::table('kategori')->count() : 0;
         $totalPelanggan = Schema::hasTable('pelanggan') ? DB::table('pelanggan')->count() : 0;
         $totalTransaksi = Schema::hasTable('transaksi') ? DB::table('transaksi')->count() : 0;
 
-        // =============================
-        // GRAFIK PENJUALAN (12 BULAN)
-        // =============================
+        // GRAFIK 12 BULAN
         $bulan = [];
         $totalPenjualan = [];
 
@@ -49,42 +38,19 @@ class HalamanController extends Controller
 
         $totalPenjualan = array_values($totalPenjualan);
 
-        // =============================
-        // PRODUK TERLARIS
-        // =============================
-        $produkTerlaris = [];
-
-        if (Schema::hasTable('detail_transaksi') && Schema::hasTable('barang')) {
-            $produkTerlaris = DB::table('detail_transaksi')
-                ->join('barang', 'barang.id_barang', '=', 'detail_transaksi.id_barang')
+        // TRANSAKSI TERAKHIR
+        $transaksiTerakhir = Schema::hasTable('transaksi')
+            ? DB::table('transaksi')
+                ->leftJoin('pelanggan', 'pelanggan.id_pelanggan', '=', 'transaksi.id_pelanggan')
                 ->select(
-                    'barang.nama_barang',
-                    DB::raw('SUM(detail_transaksi.jumlah) as total_terjual')
+                    'transaksi.tanggal_transaksi',
+                    DB::raw('COALESCE(pelanggan.nama_pelanggan, "Pelanggan Umum") as nama_pelanggan'),
+                    'transaksi.total_bayar'
                 )
-                ->groupBy('barang.nama_barang')
-                ->orderByDesc('total_terjual')
+                ->orderByDesc('transaksi.tanggal_transaksi')
                 ->limit(5)
-                ->get();
-        }
-
-        // =============================
-// TRANSAKSI TERAKHIR (FIX)
-// =============================
-$transaksiTerakhir = [];
-
-if (Schema::hasTable('transaksi')) {
-    $transaksiTerakhir = DB::table('transaksi')
-        ->leftJoin('pelanggan', 'pelanggan.id_pelanggan', '=', 'transaksi.id_pelanggan')
-        ->select(
-            'transaksi.tanggal_transaksi',
-            DB::raw('COALESCE(pelanggan.nama_pelanggan, "Pelanggan Umum") as nama_pelanggan'),
-            'transaksi.total_bayar'
-        )
-        ->orderByDesc('transaksi.tanggal_transaksi')
-        ->limit(5)
-        ->get();
-}
-
+                ->get()
+            : [];
 
         return view('dashboard.index', compact(
             'totalBarang',
@@ -93,7 +59,6 @@ if (Schema::hasTable('transaksi')) {
             'totalTransaksi',
             'bulan',
             'totalPenjualan',
-            'produkTerlaris',
             'transaksiTerakhir'
         ));
     }

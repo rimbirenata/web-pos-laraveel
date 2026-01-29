@@ -86,23 +86,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorNoHp = document.getElementById('error-nohp');
     const errorAlamat = document.getElementById('error-alamat');
 
-    // Regex larangan: angka, koma, titik, tanda tanya, tanda seru, slash
-    const regexTerlarang = /[0-9,\.!?\/]/;
-    // Regex validasi no hp: angka saja
+    // ❗ NAMA & ALAMAT: HANYA LARANG ANGKA
+    const regexAngka = /[0-9]/;
+
+    // NO HP: ANGKA SAJA
     const regexNoHp = /^[0-9]+$/;
 
     function validasi() {
         let valid = true;
 
-        // Validasi nama suplier
-        if (regexTerlarang.test(namaSuplier.value)) {
+        if (regexAngka.test(namaSuplier.value)) {
             errorNama.style.display = 'block';
             valid = false;
         } else {
             errorNama.style.display = 'none';
         }
 
-        // Validasi no hp
         if (!regexNoHp.test(noHp.value)) {
             errorNoHp.style.display = 'block';
             valid = false;
@@ -110,8 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorNoHp.style.display = 'none';
         }
 
-        // Validasi alamat
-        if (regexTerlarang.test(alamat.value)) {
+        if (regexAngka.test(alamat.value)) {
             errorAlamat.style.display = 'block';
             valid = false;
         } else {
@@ -125,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
     noHp.addEventListener('input', validasi);
     alamat.addEventListener('input', validasi);
 
-    // Jalankan validasi awal saat load
     validasi();
 });
 </script>
+
 @endsection

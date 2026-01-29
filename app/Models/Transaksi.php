@@ -17,7 +17,6 @@ class Transaksi extends Model
         'jumlah_bayar',
         'kembalian',
         'total_keuntungan',
-        'kasir'
     ];
 
     public function detailTransaksi()

@@ -3,54 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body{
-            min-height:100vh;
-            background: linear-gradient(135deg, #1349eb, #1cc88a);
-            display:flex;
-            justify-content:center;
-            align-items:center;
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
+            font-family: Arial, Helvetica, sans-serif;
         }
-        .login-card{
-            width:380px;
-            border-radius:15px;
+        .login-box {
+            background: white;
+            padding: 30px;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.2);
+        }
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 8px;
+            margin-bottom: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<div class="card login-card shadow-lg">
-    <div class="card-header text-center bg-primary text-white rounded-top">
-        <h4 class="mb-0">🔐 Login</h4>
-        <small>Silakan masuk untuk melanjutkan</small>
-    </div>
-    <div class="card-body p-4">
+<div class="login-box">
+    <h2>Login</h2>
 
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+    @if(session('error'))
+        <div class="error">
+            {{ session('error') }}
+        </div>
+    @endif
 
-        <form action="/login" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" placeholder="Masukkan username" required autofocus>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">🚀 Login</button>
-        </form>
-    </div>
-    <div class="card-footer text-center text-muted">
-        <small>© {{ date('Y') }} Aplikasi</small>
-    </div>
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
 </div>
 
 </body>

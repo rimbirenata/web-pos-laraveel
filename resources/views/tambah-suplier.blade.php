@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const peringatanAlamat = document.getElementById('peringatan-alamat');
     const tombol = document.getElementById('btn-simpan');
 
-    // regex karakter terlarang: angka, . ; ! ? /
-    const regexTerlarang = /[0-9.;!?\/]/;
+    // ❗ HANYA LARANG ANGKA (TITIK & KOMA BOLEH)
+    const regexTerlarang = /[0-9]/;
 
     function validasi() {
         let valid = true;
@@ -108,4 +108,5 @@ document.addEventListener('DOMContentLoaded', function () {
     alamat.addEventListener('input', validasi);
 });
 </script>
+
 @endsection

@@ -25,24 +25,27 @@ class PelangganController extends Controller
     }
 
     // =====================
-    // SIMPAN DATA BARU
+    // SIMPAN DATA BARU (FIX)
     // =====================
     public function simpan_pelanggan(Request $request)
     {
         $request->validate([
-            'id_pelanggan'   => 'required|numeric|unique:pelanggan,id_pelanggan',
             'nama_pelanggan' => 'required',
             'no_hp'          => 'required|regex:/^[0-9]{10,13}$/',
             'alamat'         => 'required'
         ]);
 
-        Pelanggan::create($request->all());
+        Pelanggan::create([
+            'nama_pelanggan' => $request->nama_pelanggan,
+            'no_hp'          => $request->no_hp,
+            'alamat'         => $request->alamat,
+        ]);
 
         return redirect('/pelanggan')->with('success', 'Data berhasil ditambahkan');
     }
 
     // =====================
-    // FORM UBAH (ANTI 404)
+    // FORM UBAH
     // =====================
     public function ubah($id_pelanggan)
     {
@@ -87,7 +90,6 @@ class PelangganController extends Controller
     public function hapus_pelanggan($id_pelanggan)
     {
         Pelanggan::where('id_pelanggan', $id_pelanggan)->delete();
-
         return redirect('/pelanggan')->with('success', 'Data berhasil dihapus');
     }
 }

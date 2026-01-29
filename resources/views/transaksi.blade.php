@@ -124,138 +124,91 @@ document.addEventListener('DOMContentLoaded', () => {
     let keranjang = [];
 
     const tbody = document.getElementById('keranjang');
-    const totalText = document.getElementById('totalText');
     const totalInput = document.getElementById('total');
+    const totalText  = document.getElementById('totalText');
     const bayarInput = document.getElementById('bayar');
     const kembalianInput = document.getElementById('kembalian');
-    const notifKurang = document.getElementById('notifKurang');
     const btnBayar = document.getElementById('btnBayar');
-    const scanInput = document.getElementById('scanBarang');
 
-    // ================= HITUNG KEMBALIAN (FIXED) =================
-    function hitungKembalian() {
+    // ================= TAMBAH BARANG =================
+    document.querySelectorAll('.btn-tambah').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tr = btn.closest('tr');
 
-        // 🔹 BELUM ISI BAYAR → JANGAN TAMPILKAN NOTIF
-        if (bayarInput.value === '') {
-            notifKurang.classList.add('d-none');
-            kembalianInput.value = '';
-            btnBayar.disabled = true;
-            return;
-        }
+            const id    = tr.dataset.id;
+            const nama  = tr.dataset.nama;
+            const harga = parseInt(tr.dataset.harga);
+            const stok  = parseInt(tr.dataset.stok);
 
-        const bayar = parseInt(bayarInput.value) || 0;
-        const total = parseInt(totalInput.value) || 0;
+            let item = keranjang.find(i => i.id === id);
 
-        if (bayar < total) {
-            notifKurang.classList.remove('d-none');
-            kembalianInput.value = '';
-            btnBayar.disabled = true;
-        } else {
-            notifKurang.classList.add('d-none');
-            kembalianInput.value = (bayar - total).toLocaleString('id-ID');
-            btnBayar.disabled = keranjang.length === 0;
-        }
-    }
-
-    bayarInput.addEventListener('input', hitungKembalian);
-
-    // ================= TAMBAH KE KERANJANG =================
-    function tambahKeKeranjang(tr) {
-        const id = tr.dataset.id;
-        const nama = tr.dataset.nama;
-        const harga = parseInt(tr.dataset.harga);
-        const stok = parseInt(tr.dataset.stok);
-
-        let item = keranjang.find(i => i.id === id);
-
-        if (item) {
-            if (item.qty >= stok) {
-                alert('Stok tidak cukup');
-                return;
+            if (item) {
+                if (item.jumlah >= stok) {
+                    alert('Stok tidak cukup');
+                    return;
+                }
+                item.jumlah++;
+            } else {
+                if (stok < 1) {
+                    alert('Stok habis');
+                    return;
+                }
+                keranjang.push({
+                    id, nama, harga, jumlah: 1, stok
+                });
             }
-            item.qty++;
-        } else {
-            if (stok < 1) {
-                alert('Stok habis');
-                return;
-            }
-            keranjang.push({ id, nama, harga, qty: 1, stok });
-        }
 
-        renderKeranjang();
-    }
+            renderKeranjang();
+        });
+    });
 
-    // ================= RENDER KERANJANG =================
+    // ================= RENDER =================
     function renderKeranjang() {
+        tbody.innerHTML = '';
+        let total = 0;
 
         if (keranjang.length === 0) {
             tbody.innerHTML =
-                `<tr><td colspan="5" class="text-center">Keranjang kosong</td></tr>`;
-            totalText.innerText = 'Rp 0';
+                `<tr><td colspan="5" align="center">Keranjang kosong</td></tr>`;
             totalInput.value = 0;
-
-            // ⛔ JANGAN munculkan notif
-            notifKurang.classList.add('d-none');
+            totalText.innerText = 'Rp 0';
             btnBayar.disabled = true;
             kembalianInput.value = '';
             return;
         }
 
-        let total = 0;
-        tbody.innerHTML = '';
-
         keranjang.forEach((item, idx) => {
-            const subtotal = item.harga * item.qty;
+            const subtotal = item.harga * item.jumlah;
             total += subtotal;
 
             tbody.innerHTML += `
                 <tr>
                     <td>${item.nama}</td>
                     <td>Rp ${item.harga.toLocaleString('id-ID')}</td>
-                    <td>
-                        <input type="number"
-                               class="form-control form-control-sm input-qty"
-                               value="${item.qty}"
-                               min="1"
-                               max="${item.stok}"
-                               data-idx="${idx}">
-                    </td>
+                    <td align="center">${item.jumlah}</td>
                     <td>Rp ${subtotal.toLocaleString('id-ID')}</td>
                     <td>
                         <button type="button"
-                                class="btn btn-sm btn-danger btn-hapus"
-                                data-idx="${idx}">
+                            class="btn btn-sm btn-danger"
+                            data-idx="${idx}">
                             ✕
                         </button>
                     </td>
                 </tr>
 
                 <input type="hidden" name="keranjang[${idx}][id]" value="${item.id}">
-                <input type="hidden" name="keranjang[${idx}][jumlah]" value="${item.qty}">
+                <input type="hidden" name="keranjang[${idx}][jumlah]" value="${item.jumlah}">
             `;
         });
 
-        totalText.innerText = 'Rp ' + total.toLocaleString('id-ID');
         totalInput.value = total;
-
-        // ❗ hanya hitung kembalian jika user SUDAH mengetik bayar
+        totalText.innerText = 'Rp ' + total.toLocaleString('id-ID');
         hitungKembalian();
-        pasangEvent();
+        pasangHapus();
     }
 
-    function pasangEvent() {
-        document.querySelectorAll('.input-qty').forEach(input => {
-            input.addEventListener('change', () => {
-                const idx = input.dataset.idx;
-                let val = parseInt(input.value);
-                if (val < 1) val = 1;
-                if (val > keranjang[idx].stok) val = keranjang[idx].stok;
-                keranjang[idx].qty = val;
-                renderKeranjang();
-            });
-        });
-
-        document.querySelectorAll('.btn-hapus').forEach(btn => {
+    function pasangHapus() {
+        document.querySelectorAll('.btn-danger').forEach(btn => {
             btn.addEventListener('click', () => {
                 keranjang.splice(btn.dataset.idx, 1);
                 renderKeranjang();
@@ -263,29 +216,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.querySelectorAll('.btn-tambah').forEach(btn => {
-        btn.addEventListener('click', () =>
-            tambahKeKeranjang(btn.closest('tr'))
-        );
-    });
+    function hitungKembalian() {
+        const bayar = parseInt(bayarInput.value || 0);
+        const total = parseInt(totalInput.value || 0);
 
-    // ================= SCAN BARANG =================
-    scanInput.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const id = scanInput.value.trim();
-            if (!id) return;
-
-            const tr = document.querySelector(`tr[data-id="${id}"]`);
-            if (!tr) {
-                alert('Barang tidak ditemukan');
-                return;
-            }
-
-            tambahKeKeranjang(tr);
-            scanInput.value = '';
+        if (bayar < total || total === 0) {
+            btnBayar.disabled = true;
+            kembalianInput.value = '';
+        } else {
+            btnBayar.disabled = false;
+            kembalianInput.value =
+                (bayar - total).toLocaleString('id-ID');
         }
-    });
+    }
+
+    bayarInput.addEventListener('input', hitungKembalian);
 
 });
 </script>

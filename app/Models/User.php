@@ -6,17 +6,23 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    protected $table = 'user'; // karena tabel kamu "user"
+    protected $table = 'user';          
+    protected $primaryKey = 'id_user';
+    public $timestamps = false;
 
     protected $fillable = [
-        'nama',
         'username',
-        'password'
+        'password',
+        'nama_lengkap'
     ];
 
     protected $hidden = [
-        'password'
+        'password',
     ];
 
-    public $timestamps = false;
+    // 🔥 TAMBAHAN WAJIB
+    public function getAuthIdentifierName()
+    {
+        return 'id_user';
+    }
 }

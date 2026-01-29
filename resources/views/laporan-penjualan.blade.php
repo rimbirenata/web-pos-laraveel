@@ -49,7 +49,7 @@
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-primary text-center">
                 <tr>
-                    <th>#</th>
+                    <th>No</th>
                     <th>Waktu Transaksi</th>
                     <th class="text-end">Total Bayar</th>
                     <th class="text-end">Keuntungan</th>
