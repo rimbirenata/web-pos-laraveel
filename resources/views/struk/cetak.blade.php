@@ -4,55 +4,87 @@
     <meta charset="UTF-8">
     <title>Struk Pembayaran</title>
     <style>
-        * { box-sizing: border-box; }
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: monospace;
+        background: #eee;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .struk {
+        width: 280px;
+        background: #fff;
+        padding: 12px;
+        border: 1px dashed #000;
+        font-size: 13px;
+        line-height: 1.3;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .center strong {
+        font-size: 16px;
+        letter-spacing: 1px;
+    }
+
+    .line {
+        border-top: 1px dashed #000;
+        margin: 6px 0;
+    }
+
+    .struk span {
+        float: right;
+    }
+
+    .btn-print {
+        margin-top: 15px;
+        padding: 8px 18px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    @media print {
         body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: monospace;
-            background: #eee;
+            background: none;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .struk {
-            width: 350px;
-            background: #fff;
-            padding: 20px;
-            border: 1px dashed #000;
-            font-size: 16px;
-            line-height: 1.4;
-        }
-        .center {
-            text-align: center;
-        }
-        .line {
-            border-top: 1px dashed #000;
-            margin: 8px 0;
-        }
+
         .btn-print {
-            margin-top: 20px;
-            padding: 10px 25px;
-            font-size: 16px;
-            cursor: pointer;
+            display: none;
         }
-        @media print {
-            .btn-print {
-                display: none;
-            }
+
+        .struk {
+            border: none;
+            width: 260px;
+            font-size: 12px;
         }
+    }
+</style>
+
     </style>
 </head>
 <body>
 <div class="container">
     <div class="struk">
         <div class="center">
-            <strong>INDOMARET</strong><br>
-            Jl. Contoh Alamat No.123<br>
+            <strong>TOKO KABASA SERBA ADA</strong><br>
+            jalanin aja dulu siapa tau nyaman<br>
+            kecamatan selalu di kecewakan
             Telp: 0812-XXXX-XXXX
         </div>
 

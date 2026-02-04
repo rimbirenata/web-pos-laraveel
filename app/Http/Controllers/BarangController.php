@@ -41,7 +41,7 @@ class BarangController extends Controller
         ]);
 
         Barang::create($request->all());
-        return redirect()->route('barang-index');
+        return redirect()->route('barang');
     }
 
     public function edit($id_barang)
@@ -71,12 +71,12 @@ class BarangController extends Controller
         ]);
 
         Barang::findOrFail($id_barang)->update($request->all());
-        return redirect()->route('barang-index');
+        return redirect()->route('barang');
     }
 
     public function hapus($id_barang)
     {
         Barang::findOrFail($id_barang)->delete();
-        return redirect()->route('barang-index');
+        return redirect()->route('barang');
     }
 }

@@ -100,7 +100,7 @@
             </div>
 
             <button class="btn btn-warning" id="btn-submit">Update</button>
-            <a href="{{ route('barang-index') }}" class="btn btn-secondary">
+            <a href="{{ route('barang') }}" class="btn btn-secondary">
                 Kembali
             </a>
         </form>

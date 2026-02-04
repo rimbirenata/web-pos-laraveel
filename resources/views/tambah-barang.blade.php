@@ -63,7 +63,7 @@
             </div>
 
             <button class="btn btn-success">Simpan</button>
-            <a href="{{ route('barang-index') }}" class="btn btn-secondary">Kembali</a>
+            <a href="{{ route('barang') }}" class="btn btn-secondary">Kembali</a>
         </form>
 
     </div>

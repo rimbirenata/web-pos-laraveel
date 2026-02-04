@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class StrukController extends Controller
 {
@@ -38,6 +40,8 @@ class StrukController extends Controller
         $uangDibayar = $request->input('uang_bayar', $transaksi->total_bayar);
         $kembalian = $uangDibayar - $transaksi->total_bayar;
 
-        return view('struk.cetak', compact('transaksi', 'detail', 'uangDibayar', 'kembalian'));
+        $kasir = Auth::check() ? Auth::user()->name : 'Kasir';
+
+        return view('struk.cetak', compact('transaksi', 'detail', 'uangDibayar', 'kembalian','kasir'));
     }
 }
