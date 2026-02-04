@@ -62,7 +62,7 @@ class TransaksiController extends Controller
         DB::commit();
 
         return redirect()->route('struk.cetak', [
-    'id_transaksi' => $transaksi->id_transaksi
+    'id' => $transaksi->id_transaksi
 ]);
 
     } catch (\Exception $e) {

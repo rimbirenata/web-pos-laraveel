@@ -14,36 +14,33 @@
             font-family: monospace;
             background: #eee;
         }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+
+        .container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
         }
+
         .struk {
-            width: 350px;
+            width: 350px;          /* Lebar lebih besar */
             background: #fff;
-            padding: 20px;
+            padding: 20px;         /* Padding lebih lega */
             border: 1px dashed #000;
-            font-size: 16px;
-            line-height: 1.4;
+            font-size: 16px;       /* Font lebih besar */
+            line-height: 1.4;      /* Lebih rapih */
         }
-        .center {
-            text-align: center;
-        }
-        .line {
-            border-top: 1px dashed #000;
-            margin: 8px 0;
-        }
-        .btn-print {
-            margin-top: 20px;
-            padding: 10px 25px;
+
+        .center { text-align: center; }
+        .line { border-top: 1px dashed #000; margin: 10px 0; }
+        .btn-print { 
+            margin-top: 20px; 
+            padding: 10px 25px; 
             font-size: 16px;
             cursor: pointer;
         }
+
         @media print {
-            .btn-print {
-                display: none;
-            }
+            .btn-print { display: none; }
         }
     </style>
 </head>
@@ -72,14 +69,15 @@
 
         <div class="line"></div>
 
-        Total <span style="float:right">{{ number_format($transaksi->total_bayar) }}</span><br>
-        Bayar <span style="float:right">{{ number_format($uangDibayar) }}</span><br>
-        Kembali <span style="float:right">{{ number_format($kembalian) }}</span>
+        <strong>Total</strong> <span style="float:right">{{ number_format($transaksi->total_bayar) }}</span><br>
+        <strong>Bayar</strong> <span style="float:right">{{ number_format($uangDibayar) }}</span><br>
+        <strong>Kembali</strong> <span style="float:right">{{ number_format($kembalian) }}</span>
 
         <div class="line"></div>
 
         <div class="center">
-            Terima kasih sudah berbelanja 🙏
+            Terima kasih sudah berbelanja 🙏<br>
+            Barang yang sudah dibeli tidak dapat dikembalikan
         </div>
     </div>
 

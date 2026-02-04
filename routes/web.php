@@ -37,25 +37,32 @@ Route::middleware(['auth'])->group(function () {
     // =====================
     // BARANG
     // =====================
-    Route::get('/barang', [BarangController::class, 'index'])->name('barang-index');
-    Route::get('/barang/tambah', [BarangController::class, 'tambah'])->name('barang-tambah');
-    Route::post('/barang/simpan', [BarangController::class, 'simpan'])->name('barang-simpan');
+    Route::get('/barang', [BarangController::class, 'index'])
+    ->name('barang');
 
-    Route::get('/barang/edit/{id_barang}', [BarangController::class, 'edit'])->name('barang-edit');
-    Route::put('/barang/update/{id_barang}', [BarangController::class, 'update'])->name('barang-update');
-    Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])->name('barang-hapus');
+Route::get('/barang/tambah', [BarangController::class, 'tambah'])
+    ->name('barang-tambah');
 
+Route::post('/barang/simpan', [BarangController::class, 'simpan'])
+    ->name('barang-simpan');
+
+Route::get('/barang/edit/{id_barang}', [BarangController::class, 'edit'])
+    ->name('barang-edit');
+
+Route::put('/barang/update/{id_barang}', [BarangController::class, 'update'])
+    ->name('barang-update');
+
+Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])
+    ->name('barang-hapus');
     // =====================
     // SUPLIER
     // =====================
-   Route::get('/suplier', [SuplierController::class, 'index'])->name('suplier.index');
-Route::get('/suplier/tambah', [SuplierController::class, 'tambah'])->name('suplier.tambah');
-Route::post('/suplier/simpan', [SuplierController::class, 'simpan'])->name('suplier.simpan');
-
-Route::get('/suplier/{id}/ubah', [SuplierController::class, 'ubah'])->name('suplier.ubah');
-Route::post('/suplier/simpan-ubah/{id}', [SuplierController::class, 'simpan_ubah'])->name('suplier.simpan_ubah');
-
-Route::get('/suplier/hapus/{id}', [SuplierController::class, 'hapus_suplier'])->name('suplier.hapus');
+    Route::get('/suplier', [SuplierController::class, 'index']);
+    Route::get('/suplier/tambah', [SuplierController::class, 'create']);
+    Route::post('/suplier/simpan', [SuplierController::class, 'store']);
+    Route::get('/suplier/{id}/ubah', [SuplierController::class, 'ubah']);
+    Route::post('/suplier/simpan-ubah/{id}', [SuplierController::class, 'update']);
+    Route::get('/suplier/{id}/hapus', [SuplierController::class, 'destroy']);
 
     // =====================
     // KATEGORI
@@ -73,36 +80,36 @@ Route::get('/suplier/hapus/{id}', [SuplierController::class, 'hapus_suplier'])->
     Route::get('/pelanggan', [PelangganController::class, 'index']);
     Route::get('/pelanggan/tambah', [PelangganController::class, 'form_tambah_pelanggan']);
     Route::post('/pelanggan/simpan', [PelangganController::class, 'simpan_pelanggan']);
-
     Route::get('/pelanggan/{id_pelanggan}/ubah', [PelangganController::class, 'ubah']);
     Route::post('/pelanggan/{id_pelanggan}/ubah', [PelangganController::class, 'simpan_ubah']);
     Route::get('/pelanggan/{id_pelanggan}/hapus', [PelangganController::class, 'hapus_pelanggan']);
     Route::get('/pelanggan/cari/{hp}', [PelangganController::class, 'cari']);
 
     // =====================
-    // TRANSAKSI (INI YANG PENTING)
+    // TRANSAKSI
     // =====================
     Route::get('/transaksi', [TransaksiController::class, 'index']);
     Route::post('/transaksi/proses', [TransaksiController::class, 'proses']);
     Route::post('/transaksi/simpan', [TransaksiController::class, 'simpan']);
-    // ⚠️ WAJIB DI DALAM AUTH → BIAR Auth::user() ADA
 
+    // =====================
+    // STRUK (INI YANG FIX)
+    // =====================
+    Route::get('/struk/{id}', [StrukController::class, 'cetak'])
+        ->name('struk.cetak');
+
+    // =====================
+    // USER
+    // =====================
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/tambah', [UserController::class, 'form_tambah']);
     Route::post('/user/simpan', [UserController::class, 'simpan_user']);
 
-    Route::get('/struk/{id_transaksi}', [StrukController::class, 'cetak'])->name('struk.cetak');
-
-
     // =====================
     // LAPORAN
     // =====================
-
-Route::middleware(['auth'])->group(function () {
     Route::get('/laporan-penjualan', [LaporanPenjualanController::class, 'index'])
         ->name('laporan.penjualan');
-});
-
 
     // =====================
     // PROFILE

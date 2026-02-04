@@ -18,13 +18,13 @@
     <tr>
         <td>{{ $b->nama_barang }}</td>
         <td>{{ $b->kategori->nama_kategori }}</td>
-        <td>{{ $b->suplier->nama_suplier }}</td>
-         <td>{{ $b->stok }}</td>
+        <td>{{ $b->suplier?->nama_suplier ?? '-' }}</td>
+        <td>{{ $b->stok }}</td>
         <td>Rp {{ number_format($b->harga_beli) }}</td>
         <td>Rp {{ number_format($b->harga_jual) }}</td>
         <td>
             <a href="{{ route('barang-edit', $b->id_barang) }}" class="btn btn-warning btn-sm">Ubah</a>
-
+            
             <form action="{{ route('barang-hapus', $b->id_barang) }}" method="POST" style="display:inline">
                 @csrf
                 @method('DELETE')

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailTransaksi extends Model
 {
     protected $table = 'detail_transaksi';
+    protected $primaryKey = 'id_detail_transaksi';
     public $timestamps = false;
 
     protected $fillable = [
@@ -16,9 +17,4 @@ class DetailTransaksi extends Model
         'harga_saat_beli',
         'subtotal'
     ];
-
-    public function barang()
-    {
-        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');
-    }
 }

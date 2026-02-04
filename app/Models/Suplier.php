@@ -8,13 +8,11 @@ class Suplier extends Model
 {
     protected $table = 'suplier';
     protected $primaryKey = 'id_suplier';
-    public $incrementing = true;
-    protected $keyType = 'int';
-    public $timestamps = false;
+    public $timestamps = false; 
 
     protected $fillable = [
         'nama_suplier',
-        'no_hp',
-        'alamat'
+        'alamat',
+        'no_hp'
     ];
 }
