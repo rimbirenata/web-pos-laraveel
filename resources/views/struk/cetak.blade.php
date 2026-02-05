@@ -1,46 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Struk Pembayaran</title>
-    <style>
+<meta charset="UTF-8">
+<title>Struk</title>
+
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
     body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-family: monospace;
-        background: #eee;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        font-size: 11px;
+        margin: 0;
+        padding: 0;
     }
 
     .struk {
-        width: 280px;
-        background: #fff;
-        padding: 12px;
-        border: 1px dashed #000;
-        font-size: 13px;
-        line-height: 1.3;
+        width: 220px;
+        margin: auto;
     }
 
     .center {
         text-align: center;
     }
 
-    .center strong {
-        font-size: 16px;
-        letter-spacing: 1px;
+    .right {
+        text-align: right;
     }
 
     .line {
@@ -48,74 +30,73 @@
         margin: 6px 0;
     }
 
-    .struk span {
-        float: right;
+    table {
+        width: 100%;
+        border-collapse: collapse;
     }
 
-    .btn-print {
-        margin-top: 15px;
-        padding: 8px 18px;
-        font-size: 14px;
-        cursor: pointer;
-    }
-
-    @media print {
-        body {
-            background: none;
-        }
-
-        .btn-print {
-            display: none;
-        }
-
-        .struk {
-            border: none;
-            width: 260px;
-            font-size: 12px;
-        }
+    td {
+        padding: 1px 0;
+        vertical-align: top;
     }
 </style>
-
-    </style>
 </head>
-<body>
-<div class="container">
-    <div class="struk">
-        <div class="center">
-            <strong>TOKO KABASA SERBA ADA</strong><br>
-            jalanin aja dulu siapa tau nyaman<br>
-            kecamatan selalu di kecewakan
-            Telp: 0812-XXXX-XXXX
-        </div>
 
-        <div class="line"></div>
+<body onload="window.print()">
 
-        No Transaksi: {{ $transaksi->id_transaksi }}<br>
-        Tanggal: {{ \Carbon\Carbon::parse($transaksi->tanggal_transaksi)->format('d-m-Y H:i') }}
+<div class="struk">
 
-        <div class="line"></div>
-
-        @foreach ($detail as $item)
-            {{ $item->nama_barang }}<br>
-            {{ $item->jumlah }} x {{ number_format($item->harga_jual) }}
-            <span style="float:right">{{ number_format($item->jumlah * $item->harga_jual) }}</span>
-            <br>
-        @endforeach
-
-        <div class="line"></div>
-
-        Total <span style="float:right">{{ number_format($transaksi->total_bayar) }}</span><br>
-        Bayar <span style="float:right">{{ number_format($uangDibayar) }}</span><br>
-        Kembali <span style="float:right">{{ number_format($kembalian) }}</span>
-
-        <div class="line"></div>
-
-        <div class="center">
-            Terima kasih sudah berbelanja 🙏
-        </div>
+    <div class="center">
+        <strong>TOKO KABASA SERBA ADA</strong><br>
+        jalanin aja dulu siapa tau nyaman<br>
+        kecamatan selalu di kecewakan
     </div>
 
-    <button class="btn-print" onclick="window.print()">🖨 Print Struk</button>
+    <div class="line"></div>
+
+    No : {{ $transaksi->id_transaksi }} <br>
+    Tgl: {{ date('d/m/Y H:i', strtotime($transaksi->tanggal_transaksi)) }} <br>
+    Kasir: {{ $transaksi->kasir ?? 'RIMBI RENATA' }}
+
+    <div class="line"></div>
+
+    <table>
+        @foreach ($detail as $d)
+        <tr>
+            <td colspan="2">{{ $d->nama_barang }}</td>
+        </tr>
+        <tr>
+            <td>{{ $d->jumlah }} x {{ number_format($d->harga_saat_beli,0,',','.') }}</td>
+            <td class="right">{{ number_format($d->subtotal,0,',','.') }}</td>
+        </tr>
+        @endforeach
+    </table>
+
+    <div class="line"></div>
+
+    <table>
+        <tr>
+            <td><strong>TOTAL</strong></td>
+            <td class="right"><strong>{{ number_format($transaksi->total_bayar,0,',','.') }}</strong></td>
+        </tr>
+        <tr>
+            <td>BAYAR</td>
+            <td class="right">{{ number_format($transaksi->jumlah_bayar,0,',','.') }}</td>
+        </tr>
+        <tr>
+            <td>KEMBALI</td>
+            <td class="right">{{ number_format($transaksi->kembalian,0,',','.') }}</td>
+        </tr>
+    </table>
+
+    <div class="line"></div>
+
+    <div class="center">
+        TERIMA KASIH TELAH BELANJA 🙏
+        barang yang sudah di beli tidak bisa di kembalikan
+    </div>
+
 </div>
+
 </body>
 </html>

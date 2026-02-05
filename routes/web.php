@@ -8,7 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\SuplierController;
 use App\Http\Controllers\TransaksiController;
-use App\Http\Controllers\LaporanPenjualanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StrukController;
 
@@ -108,8 +108,8 @@ Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])
     // =====================
     // LAPORAN
     // =====================
-    Route::get('/laporan-penjualan', [LaporanPenjualanController::class, 'index'])
-        ->name('laporan.penjualan');
+Route::get('/laporan/penjualan', [LaporanController::class, 'penjualan'])
+    ->name('laporan.penjualan');
 
     // =====================
     // PROFILE

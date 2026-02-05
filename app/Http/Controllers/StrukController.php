@@ -2,45 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-
 
 class StrukController extends Controller
 {
-    public function cetak(Request $request, $id_transaksi)
+    public function cetak($id_transaksi)
     {
-
-        // Ambil data transaksi total
         $transaksi = DB::table('transaksi')
-            ->join('detail_transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksi.id_transaksi')
-            ->join('barang', 'barang.id_barang', '=', 'detail_transaksi.id_barang')
-            ->where('transaksi.id_transaksi', $id_transaksi)
-            ->select(
-                'transaksi.id_transaksi',
-                'transaksi.tanggal_transaksi',
-                DB::raw('SUM(detail_transaksi.jumlah * barang.harga_jual) as total_bayar'),
-                DB::raw('SUM((barang.harga_jual - barang.harga_modal) * detail_transaksi.jumlah) as total_keuntungan')
-            )
-            ->groupBy('transaksi.id_transaksi', 'transaksi.tanggal_transaksi')
+            ->where('id_transaksi', $id_transaksi)
             ->first();
 
-        // Ambil detail per item
+        if (!$transaksi) {
+            abort(404);
+        }
+
         $detail = DB::table('detail_transaksi')
             ->join('barang', 'barang.id_barang', '=', 'detail_transaksi.id_barang')
             ->where('detail_transaksi.id_transaksi', $id_transaksi)
-            ->select('barang.nama_barang', 'barang.harga_jual', 'detail_transaksi.jumlah')
+            ->select(
+                'barang.nama_barang',
+                'detail_transaksi.jumlah',
+                'detail_transaksi.harga_saat_beli',
+                'detail_transaksi.subtotal'
+            )
             ->get();
 
-        // ===============================
-        // Hitung kembalian
-        // Jika tidak dikirim lewat request, default = total bayar
-        // ===============================
-        $uangDibayar = $request->input('uang_bayar', $transaksi->total_bayar);
-        $kembalian = $uangDibayar - $transaksi->total_bayar;
-
-
-        return view('struk.cetak', compact('transaksi', 'detail', 'uangDibayar', 'kembalian'));
+        return view('struk.cetak', compact('transaksi', 'detail'));
     }
 }
