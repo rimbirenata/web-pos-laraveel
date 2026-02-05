@@ -18,7 +18,8 @@
             </div>
         @endif
 
-        <form action="{{ route('suplier.simpan_ubah', $suplier->id_suplier) }}" method="POST">
+      <form action="/suplier/simpan-ubah/{{ $suplier->id_suplier }}" method="POST">
+
             @csrf
 
             <div class="mb-3">

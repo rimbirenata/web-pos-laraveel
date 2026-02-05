@@ -28,9 +28,11 @@ class SuplierController extends Controller
 
         Suplier::create($request->all());
 
-        return redirect('/suplier')->with('success', 'Data suplier berhasil ditambahkan');
+        return redirect('/suplier')
+            ->with('success', 'Data suplier berhasil ditambahkan');
     }
 
+    // 🔹 DI SINI LETAKNYA
     public function ubah($id)
     {
         $suplier = Suplier::findOrFail($id);
@@ -48,12 +50,16 @@ class SuplierController extends Controller
         $suplier = Suplier::findOrFail($id);
         $suplier->update($request->all());
 
-        return redirect('/suplier')->with('success', 'Data suplier berhasil diubah');
+        return redirect('/suplier')
+            ->with('success', 'Data suplier berhasil diubah');
     }
 
+    // 🔹 DAN INI JUGA DI DALAM CLASS
     public function destroy($id)
     {
         Suplier::findOrFail($id)->delete();
-        return redirect('/suplier')->with('success', 'Data suplier berhasil dihapus');
+
+        return redirect('/suplier')
+            ->with('success', 'Data suplier berhasil dihapus');
     }
 }

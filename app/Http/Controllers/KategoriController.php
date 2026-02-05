@@ -9,7 +9,7 @@ class KategoriController extends Controller
 {
     public function index()
     {
-        $kategori = Kategori::all();
+        $kategori = Kategori::withCount('barang')->get();
         return view('kategori', compact('kategori'));
     }
 
@@ -22,16 +22,11 @@ class KategoriController extends Controller
     {
         $request->validate(
             [
-                'nama_kategori' => [
-                    'required',
-                    'regex:/^[A-Za-z\s]+$/'
-                ]
+                'nama_kategori' => ['required', 'regex:/^[A-Za-z\s]+$/']
             ],
             [
-                'nama_kategori.required' =>
-                    'Nama kategori wajib diisi',
-                'nama_kategori.regex' =>
-                    'Nama kategori tidak boleh mengandung angka atau tanda ? , . ! /'
+                'nama_kategori.required' => 'Nama kategori wajib diisi',
+                'nama_kategori.regex' => 'Nama kategori tidak boleh mengandung angka atau simbol'
             ]
         );
 
@@ -39,8 +34,7 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
-        return redirect('/kategori')
-            ->with('success', 'Kategori berhasil ditambahkan');
+        return redirect('/kategori')->with('success', 'Kategori berhasil ditambahkan');
     }
 
     public function ubah($id)
@@ -53,16 +47,7 @@ class KategoriController extends Controller
     {
         $request->validate(
             [
-                'nama_kategori' => [
-                    'required',
-                    'regex:/^[A-Za-z\s]+$/'
-                ]
-            ],
-            [
-                'nama_kategori.required' =>
-                    'Nama kategori wajib diisi',
-                'nama_kategori.regex' =>
-                    'Nama kategori tidak boleh mengandung angka atau tanda ? , . ! /'
+                'nama_kategori' => ['required', 'regex:/^[A-Za-z\s]+$/']
             ]
         );
 
@@ -71,15 +56,22 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
-        return redirect('/kategori')
-            ->with('success', 'Kategori berhasil diubah');
+        return redirect('/kategori')->with('success', 'Kategori berhasil diubah');
     }
 
+    // 🔐 INI INTINYA
     public function hapus_kategori($id)
     {
-        Kategori::findOrFail($id)->delete();
+        $kategori = Kategori::findOrFail($id);
 
-        return redirect('/kategori')
-            ->with('success', 'Kategori berhasil dihapus');
+        // CEK MASIH DIPAKAI BARANG ATAU TIDAK
+        if ($kategori->barang()->count() > 0) {
+            return redirect('/kategori')
+                ->with('error', 'Kategori tidak bisa dihapus karena masih digunakan oleh barang');
+        }
+
+        $kategori->delete();
+
+        return redirect('/kategori')->with('success', 'Kategori berhasil dihapus');
     }
 }

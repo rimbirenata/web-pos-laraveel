@@ -1,42 +1,64 @@
 @extends('layout')
+
 @section('konten')
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Data Kategori</h4>
+        <a href="/kategori/tambah" class="btn btn-primary btn-sm">+ Tambah</a>
+    </div>
 
-<h4 class="mb-3">Data Kategori</h4>
+    <div class="card-body">
 
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
-<a href="/kategori/tambah" class="btn btn-primary btn-sm mb-3">Tambah Data Kategori</a>
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
-<table class="table table-bordered table-hover">
-    <thead class="table-light">
-        <tr>
-            <th>ID Kategori</th>
-            <th>Nama Kategori</th>
-            <th width="150">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse ($kategori as $item)
-        <tr>
-            <td>{{ $item->id_kategori }}</td>
-            <td>{{ $item->nama_kategori }}</td>
-            <td>
-                <a href="/kategori/{{ $item->id_kategori }}/ubah" class="btn btn-warning btn-sm">Ubah</a>
-                <form action="/kategori/hapus/{{ $item->id_kategori }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm"
-                        onclick="return confirm('Yakin hapus kategori {{ $item->nama_kategori }} ?')">Hapus</button>
-                </form>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="3" class="text-center">Data kategori belum ada</td>
-        </tr>
-        @endforelse
-    </tbody>
-</table>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>Nama Kategori</th>
+                    <th class="text-center">Jumlah Barang</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($kategori as $k)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $k->nama_kategori }}</td>
+                    <td class="text-center">{{ $k->barang_count }}</td>
+                    <td class="text-center">
+
+                        <a href="/kategori/{{ $k->id }}/ubah" class="btn btn-warning btn-sm">
+                            Ubah
+                        </a>
+
+                        @if($k->barang_count > 0)
+                            <button class="btn btn-danger btn-sm" disabled
+                                title="Masih dipakai barang">
+                                Hapus
+                            </button>
+                        @else
+                            <form action="/kategori/{{ $k->id }}/hapus" method="POST" style="display:inline">
+                                @csrf
+                                <button class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin hapus kategori?')">
+                                    Hapus
+                                </button>
+                            </form>
+                        @endif
+
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
+</div>
 @endsection

@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <form action="{{ route('suplier.simpan') }}" method="POST">
+        <form action="/suplier/simpan" method="POST">
             @csrf
 
             {{-- Nama Suplier --}}
@@ -64,7 +64,7 @@
             </div>
 
             <button class="btn btn-success" id="btn-simpan">Simpan</button>
-            <a href="{{ route('suplier.index') }}" class="btn btn-secondary">
+            <a href="/suplier" class="btn btn-secondary">
                 Kembali
             </a>
         </form>
