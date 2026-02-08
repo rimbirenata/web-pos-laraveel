@@ -121,4 +121,7 @@ Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])
         return view('profile');
     })->name('profile');
 
+
+    
+
 });

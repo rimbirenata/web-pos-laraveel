@@ -8,46 +8,58 @@ use Carbon\Carbon;
 
 class LaporanController extends Controller
 {
-public function penjualan(Request $request)
-{
-    $periode = $request->periode ?? 'harian';
-    $tanggal = $request->tanggal ?? date('Y-m-d');
+    public function penjualan(Request $request)
+    {
+        $periode = $request->periode ?? 'harian';
+        $tanggal = $request->tanggal ?? date('Y-m-d');
 
-    $labelPeriode = \Carbon\Carbon::parse($tanggal)
-        ->translatedFormat('d F Y');
+        $labelPeriode = Carbon::parse($tanggal)
+            ->translatedFormat('d F Y');
 
-    $transaksi = \App\Models\Transaksi::with('detailTransaksi.barang')
-        ->whereDate('tanggal_transaksi', $tanggal)
-        ->get();
+        // ambil transaksi + relasi barang
+        $transaksi = Transaksi::with('detailTransaksi.barang')
+            ->whereDate('tanggal_transaksi', $tanggal)
+            ->get();
 
-    $detail = $transaksi->map(function ($t) {
-        $modal = 0;
+        $adaRugi = false;
 
-        foreach ($t->detailTransaksi as $d) {
-            $modal += $d->jumlah * $d->barang->harga_beli;
-        }
+        // hitung modal & untung
+        $detail = $transaksi->map(function ($t) use (&$adaRugi) {
 
-        $t->total_modal = $modal;
-        $t->total_keuntungan = $t->total_bayar - $modal;
+            $modal = 0;
 
-        return $t;
-    });
+            foreach ($t->detailTransaksi as $d) {
+                if ($d->barang) {
+                    $modal += $d->jumlah * $d->barang->harga_beli;
+                }
+            }
 
-    $totalTransaksi  = $detail->count();
-    $totalBayar      = $detail->sum('total_bayar');
-    $totalModal      = $detail->sum('total_modal');
-    $totalKeuntungan = $totalBayar - $totalModal;
+            $t->total_modal = $modal;
+            $t->total_keuntungan = $t->total_bayar - $modal;
 
-    return view('laporan.index', compact(
-        'periode',
-        'tanggal',
-        'labelPeriode',
-        'detail',
-        'totalTransaksi',
-        'totalBayar',
-        'totalModal',
-        'totalKeuntungan'
-    ));
-}
+            if ($t->total_keuntungan < 0) {
+                $adaRugi = true;
+            }
 
+            return $t;
+        });
+
+        // ringkasan
+        $totalTransaksi  = $detail->count();
+        $totalBayar      = $detail->sum('total_bayar');
+        $totalModal      = $detail->sum('total_modal');
+        $totalKeuntungan = $totalBayar - $totalModal;
+
+        return view('laporan.index', compact(
+            'periode',
+            'tanggal',
+            'labelPeriode',
+            'detail',
+            'totalTransaksi',
+            'totalBayar',
+            'totalModal',
+            'totalKeuntungan',
+            'adaRugi'
+        ));
+    }
 }

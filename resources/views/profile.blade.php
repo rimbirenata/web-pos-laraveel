@@ -1,147 +1,198 @@
 @extends('layout')
 
 @section('konten')
-<div class="container mt-5">
-    {{-- Header --}}
-    <div class="text-center mb-5">
-        <div class="p-4 rounded-4 shadow-sm bg-gradient" style="background: linear-gradient(90deg,#4e73df,#1cc88a); color:black;">
-            <h2 class="fw-bold display-5">🌟 Sistem Informasi Penjualan Kabasa</h2>
-            <p class="fs-5">Versi 11.2.0 — Laravel & Bootstrap</p>
+
+<div class="container">
+
+    <!-- HEADER PROFILE -->
+    <div class="card shadow-lg border-0 mb-4"
+         style="background: linear-gradient(135deg,#4f46e5,#06b6d4); border-radius:20px;">
+        <div class="card-body text-center text-white p-5">
+
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                 width="110"
+                 class="rounded-circle shadow mb-3">
+
+            <h2 class="fw-bold mb-1">{{ Auth::user()->name ?? 'PROGREMMER KABASA' }}</h2>
+            <p class="mb-2">Developer</p>
+
+            <span class="badge bg-light text-dark px-3 py-2">
+                🟢 Sistem Aktif & Normal
+            </span>
+
         </div>
     </div>
-    {{-- Grid Cards --}}
-    
-    <div class="row g-4 mb-5">
-        {{-- Tentang Aplikasi --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header py-3 rounded-top-4 text-dark" style="background: linear-gradient(90deg,#4e73df,#224abe);">
-                    <h5><i class="fas fa-info-circle me-2"></i>Tentang Aplikasi</h5>
+
+    <div class="row">
+
+        <!-- INFO USER -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-primary text-white fw-bold">
+                    👤 Informasi Akun
                 </div>
+
                 <div class="card-body">
-                    <p>
-                        <strong>Sistem Informasi Penjualan Kabasa</strong> membantu usaha dalam
-                        pencatatan transaksi, pengelolaan barang, pelanggan, supplier, serta laporan harian
-                        secara cepat & akurat.
-                    </p>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>Nama Aplikasi:</strong> Kabasa SIP</li>
-                                <li><strong>Versi:</strong> 11.2.0</li>
-                                <li><strong>Platform:</strong> Web</li>
-                            </ul>
-                        </div>
-                        <div class="col-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><strong>Laravel:</strong> 11 & PHP 8.1</li>
-                                <li><strong>Database:</strong> MySQL</li>
-                                <li><strong>Server:</strong> Laragon</li>
-                            </ul>
-                        </div>
+                    <table class="table">
+                        <tr>
+                            <th width="180">Nama</th>
+                            <td>{{ Auth::user()->name ?? 'RIMBI' }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Username</th>
+                            <td>{{ Auth::user()->username ?? 'RIMBIRENATA' }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ Auth::user()->email ?? 'rimbi.renata5@gmail.com' }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Role</th>
+                            <td><span class="badge bg-success">PROGREMMER FULLSTACK</span></td>
+                        </tr>
+
+                        <tr>
+                            <th>Bergabung</th>
+                            <td>{{ Auth::user()->created_at ?? '22 DESEMBER 2025' }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       <!-- STAT SISTEM -->
+<div class="col-md-6 mb-4">
+    <div class="card shadow border-0 h-100">
+        <div class="card-header bg-success text-white fw-bold">
+            📊 Status & Informasi Sistem
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label class="fw-bold">Versi Aplikasi</label>
+                <div class="progress">
+                    <div class="progress-bar bg-primary" style="width:100%">
+                        Sistem Penjualan Kabasa v1.0.0
                     </div>
                 </div>
+                <small class="text-muted">
+                    Versi pertama sistem berbasis web untuk manajemen penjualan toko
+                </small>
             </div>
-        </div>
 
-        {{-- Fitur Utama --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header py-3 rounded-top-4 text-white" style="background: linear-gradient(90deg,#1cc88a,#17a673);">
-                    <h5><i class="fas fa-tools me-2"></i>Fitur Utama</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item hover-shadow"><i class="fas fa-boxes me-2 text-success"></i>Manajemen barang lengkap</li>
-                        <li class="list-group-item hover-shadow"><i class="fas fa-shopping-cart me-2 text-success"></i>Transaksi penjualan dengan keranjang</li>
-                        <li class="list-group-item hover-shadow"><i class="fas fa-users me-2 text-success"></i>Pelanggan & Supplier</li>
-                        <li class="list-group-item hover-shadow"><i class="fas fa-chart-line me-2 text-success"></i>Laporan penjualan harian</li>
-                        <li class="list-group-item hover-shadow"><i class="fas fa-id-badge me-2 text-success"></i>Profil & informasi sistem</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        {{-- Teknologi --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header py-3 rounded-top-4 text-white" style="background: linear-gradient(90deg,#36b9cc,#2c9faf);">
-                    <h5><i class="fas fa-code me-2"></i>Teknologi Digunakan</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><i class="fab fa-laravel me-2 text-info"></i>Laravel 11</li>
-                                <li><i class="fab fa-php me-2 text-info"></i>PHP 8.1</li>
-                                <li><i class="fab fa-bootstrap me-2 text-info"></i>Bootstrap</li>
-                            </ul>
-                        </div>
-                        <div class="col-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><i class="fas fa-database me-2 text-info"></i>MySQL</li>
-                                <li><i class="fas fa-desktop me-2 text-info"></i>Laragon</li>
-                                <li><i class="fab fa-js me-2 text-info"></i>JavaScript</li>
-                            </ul>
-                        </div>
+            <div class="mb-3">
+                <label class="fw-bold">Database</label>
+                <div class="progress">
+                    <div class="progress-bar bg-success" style="width:100%">
+                        MySQL Database Connected
                     </div>
                 </div>
+                <small class="text-muted">
+                    Semua data barang, transaksi, pelanggan, dan laporan tersimpan aman di database MySQL
+                </small>
             </div>
-        </div>
 
-        {{-- Cara Penggunaan --}}
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-header py-3 rounded-top-4 text-white" style="background: linear-gradient(90deg,#f6c23e,#dda20a);">
-                    <h5><i class="fas fa-book me-2"></i>Cara Penggunaan</h5>
+            <div class="mb-3">
+                <label class="fw-bold">Server & Framework</label>
+                <div class="progress">
+                    <div class="progress-bar bg-warning" style="width:100%">
+                        Laravel 11 - PHP 8 Aktif
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ol class="ps-3 mb-0">
-                        <li>Login ke dalam aplikasi (user terdaftar).</li>
-                        <li>Buka <strong>Data Barang</strong> untuk tambah/ubah/hapus barang.</li>
-                        <li>Kelola <strong>Pelanggan</strong> & <strong>Supplier</strong> sesuai kebutuhan.</li>
-                        <li>Pilih menu <strong>Transaksi</strong>, input barang, lalu proses pembayaran.</li>
-                        <li>Lihat <strong>Laporan Penjualan</strong> untuk ringkasan harian.</li>
-                    </ol>
-                </div>
+                <small class="text-muted">
+                    Sistem dibangun menggunakan Laravel sebagai backend dan Bootstrap sebagai tampilan
+                </small>
             </div>
-        </div>
 
-        {{-- Tentang Developer --}}
-        <div class="col-12">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-header py-3 rounded-top-4 text-white" style="background: linear-gradient(90deg,#5a5c69,#2e2f3e);">
-                    <h5><i class="fas fa-users me-2"></i>Tentang Tim Developer kami</h5>
-                </div>
-                <div class="card-body">
-                    <p>
-                        Aplikasi ini dibuat oleh <strong>Tim 18 Kabasa</strong> sebagai project Sistem Informasi Penjualan.
-                        Bila ada pertanyaan atau fitur tambahan:
-                    </p>
-                    <ul class="list-unstyled mb-0">
-                        <li><strong>Email:</strong> tim18.kabasa@gmail.com</li>
-                        <li><strong>Telepon:</strong> 0812-7549-3227</li>
-                        <li><strong>GitHub:</strong> <a href="https://github.com/tim18-kabasa" target="_blank">github.com/tim18-kabasa</a></li>
-                    </ul>
-                </div>
+            <hr>
+
+            <h6 class="fw-bold">🧾 Fungsi Utama Program</h6>
+            <ul class="small">
+                <li>Manajemen data barang dan stok</li>
+                <li>Pencatatan transaksi penjualan</li>
+                <li>Data pelanggan dan supplier</li>
+                <li>Laporan penjualan harian & bulanan</li>
+                <li>Perhitungan otomatis untung dan modal</li>
+                <li>Cetak struk pembayaran</li>
+                <li>Dashboard statistik penjualan</li>
+            </ul>
+
+            <div class="alert alert-info mt-3">
+                🚀 Sistem Informasi Penjualan Kabasa membantu toko dalam mengelola penjualan secara cepat, rapi,
+                dan akurat.
             </div>
-        </div>
 
-        <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3 rounded-pill">← Kembali</a>
+        </div>
+    </div>
+</div>
+        <!-- CARD ABOUT -->
+<div class="card shadow border-0">
+    <div class="card-header bg-dark text-white fw-bold">
+        💻 Tim Developer Sistem Penjualan Kabasa
     </div>
 
-    {{-- Footer --}}
-   
-        <br>
+    <div class="card-body">
+
+        <div class="row text-center">
+
+            <!-- DEVELOPER 1 -->
+            <div class="col-md-6 mb-4">
+                <img src="{{ asset('public/images/lubna.png') }}" width="90" class="rounded-circle shadow mb-2">
+                <h5 class="fw-bold mb-0">LUBNAYA ARIFAH HANUM</h5>
+                <small class="text-muted">Fullstack Developer</small>
+
+                <div class="mt-2">
+                    <span class="badge bg-primary">Laravel</span>
+                    <span class="badge bg-success">MySQL</span>
+                    <span class="badge bg-dark">Bootstrap</span>
+                </div>
+            </div>
+
+            <!-- DEVELOPER 2 -->
+            <div class="col-md-6 mb-4">
+            <img src="{{ asset('images/rimbi.png') }}" width="90" class="rounded-circle shadow mb-2">
+                 <h5 class="fw-bold mb-0">NURALIFAH NAZLATUL AZIZAH</h5>
+                <small class="text-muted">UI Designer & Programmer</small>
+
+                <div class="mt-2">
+                    <span class="badge bg-warning">UI Design</span>
+                    <span class="badge bg-info">Frontend</span>
+                    <span class="badge bg-success">Database</span>
+                </div>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="text-center">
+            <p class="mb-0">
+                Sistem Informasi Penjualan Kabasa dibuat sebagai project pengembangan
+                aplikasi berbasis web untuk mempermudah pengelolaan transaksi, barang,
+                dan laporan penjualan secara digital.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+        <hr>
+
+        <div class="text-center">
+            <p class="mb-0">
+                🚀 Sistem Informasi Penjualan Kabasa dibuat untuk tugas/project sekolah
+                oleh 2 developer.
+            </p>
+        </div>
+
+    </div>
+</div>
+
 
 </div>
 
-{{-- CSS tambahan --}}
-<style>
-.hover-shadow:hover {
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    transition: all 0.3s;
-}
-</style>
 @endsection
