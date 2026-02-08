@@ -108,8 +108,11 @@ Route::delete('/barang/hapus/{id_barang}', [BarangController::class, 'hapus'])
     // =====================
     // LAPORAN
     // =====================
-Route::get('/laporan/penjualan', [LaporanController::class, 'penjualan'])
-    ->name('laporan.penjualan');
+    
+
+    Route::get('/laporan', [LaporanController::class, 'penjualan'])
+    ->name('laporan');
+
 
     // =====================
     // PROFILE

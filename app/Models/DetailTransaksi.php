@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailTransaksi extends Model
 {
     protected $table = 'detail_transaksi';
-
-    protected $primaryKey = 'id_detail_transaksi'; // SESUAI DB
+    protected $primaryKey = 'id_detail_transaksi';
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -20,5 +19,11 @@ class DetailTransaksi extends Model
         'subtotal'
     ];
 
-    public $timestamps = false; // kalau tabel tidak punya created_at
+    public $timestamps = false;
+
+    // 🔥 RELASI KE BARANG
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'id_barang', 'id_barang');
+    }
 }

@@ -75,7 +75,9 @@
                 📈 Tren Penjualan Tahunan
             </div>
             <div class="card-body">
-                <canvas id="areaChart" height="120"></canvas>
+                <div style="height:350px">
+                    <canvas id="areaChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -86,7 +88,9 @@
                 📊 Perbandingan Bulanan
             </div>
             <div class="card-body">
-                <canvas id="barChart" height="120"></canvas>
+                <div style="height:260px">
+                    <canvas id="barChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -118,49 +122,68 @@
     </div>
 </div>
 
-{{-- CHART --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const labels = @json($bulan);
 const dataPenjualan = @json($totalPenjualan);
 
 // AREA CHART
-new Chart(areaChart, {
+new Chart(document.getElementById('areaChart'), {
     type: 'line',
     data: {
         labels,
         datasets: [{
             data: dataPenjualan,
             borderColor: '#0d6efd',
-            backgroundColor: 'rgba(13,110,253,.15)',
+            backgroundColor: 'rgba(13,110,253,.25)',
             fill: true,
-            tension: .45,
-            pointRadius: 4
+            tension: 0.4,
+            pointRadius: 5,
+            pointHoverRadius: 7
         }]
     },
     options: {
-        plugins: { legend: { display: false }},
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
         scales: {
-            x: { grid: { display: false }},
-            y: { beginAtZero: true }
+            x: {
+                grid: { display: false },
+                ticks: { font: { size: 13 } }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { font: { size: 13 } }
+            }
         }
     }
 });
 
 // BAR CHART
-new Chart(barChart, {
+new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
         labels,
         datasets: [{
             data: dataPenjualan,
             backgroundColor: '#0d6efd',
-            borderRadius: 6
+            borderRadius: 8
         }]
     },
     options: {
-        plugins: { legend: { display: false }},
-        scales: { y: { beginAtZero: true }}
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { font: { size: 13 } }
+            }
+        }
     }
 });
 </script>

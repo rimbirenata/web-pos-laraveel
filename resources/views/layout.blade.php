@@ -179,7 +179,7 @@
             </li>
 
             <li>
-                <a href="/laporan-penjualan" class="nav-link {{ request()->is('laporan*') ? 'active' : '' }}">
+                <a href="laporan" class="nav-link {{ request()->is('laporan*') ? 'active' : '' }}">
                     <span class="icon">📊</span>
                     <span>Laporan</span>
                 </a>
